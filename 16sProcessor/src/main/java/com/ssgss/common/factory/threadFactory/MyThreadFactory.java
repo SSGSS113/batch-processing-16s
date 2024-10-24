@@ -6,7 +6,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @AllArgsConstructor
-public class ImportThreadFactory implements ThreadFactory {
+public class MyThreadFactory implements ThreadFactory {
     private final AtomicInteger threadCount = new AtomicInteger(0);
     private final String namePrefix;
     @Override

@@ -1,4 +1,4 @@
-package com.ssgss.common;
+package com.ssgss;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

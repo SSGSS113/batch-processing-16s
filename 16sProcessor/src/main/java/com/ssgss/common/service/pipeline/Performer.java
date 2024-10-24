@@ -1,37 +1,38 @@
-package com.ssgss.common.service.pipeline.impl;
+package com.ssgss.common.service.pipeline;
 
-import com.ssgss.common.configration.ThreadPollConfigrature;
 import com.ssgss.common.constant.CommonConstant;
-import com.ssgss.common.entity.SraDTO;
-import com.ssgss.common.service.task.DownloadTask;
-import lombok.AllArgsConstructor;
+import com.ssgss.common.service.task.AbstractTask;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.util.Objects;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.*;
 
-@Service
 @Slf4j
 public class Performer {
     private final BlockingDeque<Object> inputQueue;
     private int num;
-    private Executor executor;
-    private String step;
-    public Performer(BlockingDeque<Object> inputQueue, Executor executor, String step){
+    private final Executor executor;
+    private final String step;
+    private final Class clazz;
+    public Performer(BlockingDeque<Object> inputQueue, Executor executor, String step, Class clazz){
         this.executor = executor;
         this.inputQueue = inputQueue;
         this.step = step;
         num = 0;
+        this.clazz = clazz;
     }
     public void consume() {
         while (num < CommonConstant.NUM) {
             try {
+                Constructor<?> constructor = clazz.getDeclaredConstructor(Object.class);
                 Object sra = inputQueue.take();
-                executor.execute(new DownloadTask(sra));
+                AbstractTask task = (AbstractTask) constructor.newInstance(sra);
+                executor.execute(task);
                 num ++;
             } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
         }

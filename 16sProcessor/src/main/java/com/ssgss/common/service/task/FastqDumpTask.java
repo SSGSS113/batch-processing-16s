@@ -1,38 +1,32 @@
 package com.ssgss.common.service.task;
 
-import com.ssgss.SraToolKit.constant.SraToolKitConstant;
 import com.ssgss.SraToolKit.entity.SraDownloadDTO;
 import com.ssgss.SraToolKit.service.SraToolKitService;
+import com.ssgss.common.constant.BlockQueueConstant;
 import com.ssgss.common.constant.CommonConstant;
 import com.ssgss.common.entity.SraDTO;
+import com.ssgss.qiime2.entity.SraQiime2DTO;
 import jakarta.annotation.Resource;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.util.concurrent.BlockingDeque;
 
-@Service
-public class DownloadTask implements Runnable{
-    private SraDTO sra;
+public class FastqDumpTask extends AbstractTask{
+    private final SraDownloadDTO sra;
     @Resource
     private SraToolKitService service;
-    private static final BlockingDeque<SraDownloadDTO> outputQueue = CommonConstant.DOWNLOAD_LIST;
-
-    public DownloadTask(SraDTO sra) {
-        this.sra = sra;
+    private static final BlockingDeque<Object> outputQueue = BlockQueueConstant.FASTQ_DUMP;
+    private static final String type = ":FastqDump";
+    public FastqDumpTask(Object sra) {
+        super(((SraDownloadDTO)sra).getSra().getSraId() + type);
+        this.sra = (SraDownloadDTO) sra;
     }
 
     @Override
     public void run() {
-        SraDownloadDTO sraDownloadDTO = new SraDownloadDTO();
-        File SraPath = new File(SraToolKitConstant.DOWNLOAD_DIRECTORY, String.format("%s.sra", sra.getSraId()));
-        sraDownloadDTO.setSra(sra);
-        sraDownloadDTO.setSraPath(SraPath);
-        if (service.downPrefetch(sraDownloadDTO)) {
+        if (service.doFastqDump(sra)) {
             try {
-                outputQueue.put(sraDownloadDTO);
+                outputQueue.put(sra.getSra());
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

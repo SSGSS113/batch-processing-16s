@@ -5,12 +5,12 @@ import com.ssgss.common.command.AbstractCommand;
 
 import java.io.File;
 
-public class FastqDumpCommand extends AbstractCommand {
-    FastqDumpCommand(String commond, File work_directory){
+public class VdbDumpCommand extends AbstractCommand {
+    VdbDumpCommand(String commond, File work_directory){
         super(commond, work_directory);
     }
 
-    private FastqDumpCommand(Builder builder){
+    private VdbDumpCommand(Builder builder){
         super(builder.buildCommandLine(), builder.workingDirectory);
     }
 
@@ -29,9 +29,9 @@ public class FastqDumpCommand extends AbstractCommand {
 
         // 构建并返回具体的 Command 对象
         @Override
-        public FastqDumpCommand build() {
+        public VdbDumpCommand build() {
             this.setCommandLine(SraToolKitConstant.FASTQ_DUMP);
-            return new FastqDumpCommand(this);
+            return new VdbDumpCommand(this);
         }
     }
 }
