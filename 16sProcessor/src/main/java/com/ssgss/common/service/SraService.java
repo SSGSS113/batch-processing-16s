@@ -1,7 +1,8 @@
 package com.ssgss.common.service;
 
 import com.ssgss.common.constant.BlockQueueConstant;
-import com.ssgss.common.constant.CommonConstant;
+import com.ssgss.common.configration.FileConfig;
+import com.ssgss.common.constant.FileConstant;
 import com.ssgss.common.constant.ThreadPoolControl;
 import com.ssgss.common.service.pipeline.Performer;
 import com.ssgss.common.service.task.*;
@@ -11,9 +12,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class SraService {
     @Resource
+    FileConfig fileConfig;
+    @Resource
     ThreadPoolControl threadPoolControl;
     public void doCSVRead(){
-        Thread t1 = new Thread(new CSVReadTask(CommonConstant.CSV_PATH));
+        Thread t1 = new Thread(new CSVReadTask(FileConstant.CSV_PATH));
         t1.start();
     }
     public void doDownload(){

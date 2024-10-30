@@ -1,5 +1,7 @@
 package com.ssgss.common.command;
 
+import com.ssgss.common.entity.Result;
+
 public interface Command {
-    String execute();
+    Result execute();
 }

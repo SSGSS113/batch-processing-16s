@@ -1,14 +1,11 @@
 package com.ssgss.common.service.task;
 
+import com.ssgss.common.aop.annotation.ProcessTimer;
 import com.ssgss.common.constant.BlockQueueConstant;
 import com.ssgss.common.constant.CommonConstant;
 import com.ssgss.common.constant.SraException;
 import com.ssgss.common.entity.SraDTO;
-import com.ssgss.qiime2.entity.SraQiime2DTO;
-import com.ssgss.qiime2.service.Qiime2Service;
-import jakarta.annotation.Resource;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,6 +18,7 @@ public class CSVReadTask implements Runnable{
     File CSV;
     private static final BlockingDeque<Object> outputQueue = BlockQueueConstant.SRA_LIST;
     @Override
+    @ProcessTimer("CSVRead")
     public void run() throws SraException{
         if(!CSV.exists()){
             throw new SraException(String.format("CSV 文件: %s 不存在",CSV.getPath()));

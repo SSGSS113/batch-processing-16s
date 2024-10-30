@@ -1,18 +1,14 @@
 package com.ssgss.common.service.task;
 
+import com.ssgss.common.aop.annotation.ProcessTimer;
 import com.ssgss.common.constant.BlockQueueConstant;
-import com.ssgss.common.constant.CommonConstant;
 import com.ssgss.qiime2.entity.SraQiime2DTO;
 import com.ssgss.qiime2.service.Qiime2Service;
-import jakarta.annotation.Resource;
-import org.springframework.stereotype.Service;
 
 import java.util.concurrent.BlockingDeque;
 
 public class AlphaTask extends AbstractTask{
     private final SraQiime2DTO sra;
-    @Resource
-    private Qiime2Service service;
     private static final BlockingDeque<Object> outputQueue = BlockQueueConstant.TAXONOXY_LIST;
     private static final String type = ":Alpha";
     public AlphaTask(Object sra) {
@@ -21,8 +17,9 @@ public class AlphaTask extends AbstractTask{
     }
 
     @Override
+    @ProcessTimer("Qiime2:getAlpha")
     public void run() {
-        if (service.doClassify(sra)) {
+        if (Qiime2Service.doAlpha(sra)) {
             try {
                 outputQueue.put(sra);
             } catch (InterruptedException e) {

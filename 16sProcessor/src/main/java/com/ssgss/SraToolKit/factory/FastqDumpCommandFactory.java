@@ -1,30 +1,31 @@
 package com.ssgss.SraToolKit.factory;
 
 import com.ssgss.SraToolKit.command.FastqDumpCommand;
-import com.ssgss.SraToolKit.constant.SraToolKitConstant;
+import com.ssgss.SraToolKit.constant.SraToolKitFileConstant;
 import com.ssgss.SraToolKit.entity.SraDownloadDTO;
-import com.ssgss.common.command.AbstractCommand;
 import com.ssgss.common.command.Command;
-import com.ssgss.common.entity.SraDTO;
-import com.ssgss.fastqc.command.FastqcCommand;
-import com.ssgss.fastqc.entity.FastqcRequest;
+import com.ssgss.common.configration.FileConfig;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
 
+@Service
 public class FastqDumpCommandFactory {
+
     public static Command getCommand(SraDownloadDTO sra) {
         if(sra.getSra().isPaired()){
             return new FastqDumpCommand.Builder()
                     .addArg("--outdir")
-                    .addArg(SraToolKitConstant.SRA_DIRECTORY.getPath())
+                    .addArg(SraToolKitFileConstant.SRA_DIRECTORY.getPath())
                     .addArg("--split-files")
                     .addArg(sra.getSra().getSraId())
-                    .setWorkingDirectory(SraToolKitConstant.DOWNLOAD_DIRECTORY)
+                    .setWorkingDirectory(SraToolKitFileConstant.DOWNLOAD_DIRECTORY)
                     .build();
         }else{
             return new FastqDumpCommand.Builder()
                     .addArg("--outdir")
-                    .addArg(SraToolKitConstant.SRA_DIRECTORY.getPath())
+                    .addArg(SraToolKitFileConstant.SRA_DIRECTORY.getPath())
                     .addArg(sra.getSra().getSraId())
-                    .setWorkingDirectory(SraToolKitConstant.DOWNLOAD_DIRECTORY)
+                    .setWorkingDirectory(SraToolKitFileConstant.DOWNLOAD_DIRECTORY)
                     .build();
         }
     }

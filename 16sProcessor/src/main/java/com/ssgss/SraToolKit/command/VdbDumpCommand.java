@@ -30,7 +30,7 @@ public class VdbDumpCommand extends AbstractCommand {
         // 构建并返回具体的 Command 对象
         @Override
         public VdbDumpCommand build() {
-            this.setCommandLine(SraToolKitConstant.FASTQ_DUMP);
+            this.setCommandLine(SraToolKitConstant.VDBDUMP);
             return new VdbDumpCommand(this);
         }
     }

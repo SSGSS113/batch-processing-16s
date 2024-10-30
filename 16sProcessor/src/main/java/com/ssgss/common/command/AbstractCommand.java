@@ -1,8 +1,12 @@
 package com.ssgss.common.command;
 
-import com.ssgss.common.constant.CommonConstant;
+import com.ssgss.common.aop.annotation.HandleException;
+import com.ssgss.common.configration.FileConfig;
 import com.ssgss.common.constant.SraException;
+import com.ssgss.common.entity.Result;
+import jakarta.annotation.Resource;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,14 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
+@Service
 public abstract class AbstractCommand implements Command{
     private Runtime runtime = Runtime.getRuntime();
-
+    @Resource
+    private FileConfig fileConfig;
     private File workingDirectory;
     private String command;
     public AbstractCommand(String command){
         this.command = command;
-        workingDirectory = CommonConstant.ALL_WORK_DIRECTORY;
+        workingDirectory = fileConfig.getALL_WORK_DIRECTORY();
     }
     public AbstractCommand(String command, File workingDirectory){
         this.command = command;
@@ -26,7 +32,8 @@ public abstract class AbstractCommand implements Command{
     }
 
     @Override
-    public String execute() throws SraException {
+    @HandleException
+    public Result execute() throws SraException {
         try {
             Process process = runtime.exec(command, null, workingDirectory);
             // 读取并输出执行结果
@@ -48,7 +55,7 @@ public abstract class AbstractCommand implements Command{
             // 等待进程完成
             int exitCode = process.waitFor();
             if(exitCode == 0){
-                return outPutText;
+                return new Result.Builder().setSucess(true).setText(outPutText).build();
             }else{
                 throw new SraException(error);
             }
@@ -81,10 +88,8 @@ public abstract class AbstractCommand implements Command{
             }
             return sb.toString();
         }
-
         // 抽象方法返回子类类型，确保链式调用
         protected abstract T self();
-
         // 构建抽象的命令对象，具体实现由子类完成
         public abstract AbstractCommand build();
     }

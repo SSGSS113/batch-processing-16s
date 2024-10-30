@@ -1,12 +1,17 @@
 threadpool:
-  download_cores: 5
-  denoise_cores: 3
-  alpha_cores: 7
-  fastqc_cores: 7
-  import_cores: 5
-  fastqdump_cores: 5
-  taxonomy_cores: 3
-  keep_alive_time: 10
+  downloadCores: 5
+  denoiseCores: 3
+  alphaCores: 7
+  fastqcCores: 7
+  importCores: 5
+  fastqdumpCores: 5
+  taxonomyCores: 3
+  keepAliveTime: 10
+file:
+  ALL_WORK_DIRECTORY: /data
+  FILES: /files
+  CLASSIFIER_PATH: /classifer
+  CSV_PATH: /csv
 spring:
   main:
     web-application-type: none
