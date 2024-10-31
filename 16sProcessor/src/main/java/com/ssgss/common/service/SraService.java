@@ -12,11 +12,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class SraService {
     @Resource
-    FileConfig fileConfig;
-    @Resource
     ThreadPoolControl threadPoolControl;
     public void doCSVRead(){
-        Thread t1 = new Thread(new CSVReadTask(FileConstant.CSV_PATH));
+        Thread t1 = new Thread(new CSVReadTask(FileConstant.getCsvPath()));
         t1.start();
     }
     public void doDownload(){

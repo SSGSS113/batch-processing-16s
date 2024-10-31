@@ -26,6 +26,7 @@ public class Performer {
         while (num < CommonConstant.NUM) {
             try {
                 Constructor<?> constructor = clazz.getDeclaredConstructor(Object.class);
+                log.info("正在从阻塞队列: {} 中读取数据");
                 Object sra = inputQueue.take();
                 AbstractTask task = (AbstractTask) constructor.newInstance(sra);
                 executor.execute(task);

@@ -35,7 +35,7 @@ public class SraToolKitService {
         }
         return true;
     }
-    private static boolean isSuccess(Result result){
+    private static boolean isSuccess(Result result) {
         return result != null && result.isSucess();
     }
 }

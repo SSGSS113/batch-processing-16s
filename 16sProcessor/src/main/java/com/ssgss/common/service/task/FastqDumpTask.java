@@ -4,9 +4,11 @@ import com.ssgss.SraToolKit.entity.SraDownloadDTO;
 import com.ssgss.SraToolKit.service.SraToolKitService;
 import com.ssgss.common.aop.annotation.ProcessTimer;
 import com.ssgss.common.constant.BlockQueueConstant;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.BlockingDeque;
 
+@Slf4j
 public class FastqDumpTask extends AbstractTask{
     private final SraDownloadDTO sra;
     private static final BlockingDeque<Object> outputQueue = BlockQueueConstant.FASTQ_DUMP;
@@ -21,6 +23,7 @@ public class FastqDumpTask extends AbstractTask{
     public void run() {
         if (SraToolKitService.doFastqDump(sra)) {
             try {
+                log.info("分割了 SraID: {}", sra.getSra().getSraId());
                 outputQueue.put(sra.getSra());
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);

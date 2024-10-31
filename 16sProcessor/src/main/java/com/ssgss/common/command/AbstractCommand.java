@@ -2,6 +2,7 @@ package com.ssgss.common.command;
 
 import com.ssgss.common.aop.annotation.HandleException;
 import com.ssgss.common.configration.FileConfig;
+import com.ssgss.common.constant.FileConstant;
 import com.ssgss.common.constant.SraException;
 import com.ssgss.common.entity.Result;
 import jakarta.annotation.Resource;
@@ -18,13 +19,11 @@ import java.util.List;
 @Service
 public abstract class AbstractCommand implements Command{
     private Runtime runtime = Runtime.getRuntime();
-    @Resource
-    private FileConfig fileConfig;
     private File workingDirectory;
     private String command;
     public AbstractCommand(String command){
         this.command = command;
-        workingDirectory = fileConfig.getALL_WORK_DIRECTORY();
+        workingDirectory = FileConstant.getWorkDirectory();
     }
     public AbstractCommand(String command, File workingDirectory){
         this.command = command;

@@ -7,10 +7,12 @@ import com.ssgss.SraToolKit.service.SraToolKitService;
 import com.ssgss.common.aop.annotation.ProcessTimer;
 import com.ssgss.common.constant.BlockQueueConstant;
 import com.ssgss.common.entity.SraDTO;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.util.concurrent.BlockingDeque;
 
+@Slf4j
 public class DownloadTask extends AbstractTask{
     private final SraDTO sra;
     private static final BlockingDeque<Object> outputQueue = BlockQueueConstant.DOWNLOAD_LIST;
@@ -29,7 +31,9 @@ public class DownloadTask extends AbstractTask{
         sraDownloadDTO.setSra(sra);
         sraDownloadDTO.setSraPath(SraPath);
         if (SraToolKitService.downPrefetch(sraDownloadDTO)) {
+            sra.setPaired(SraToolKitService.isPaired(sraDownloadDTO));
             try {
+                log.info("下载完成 SraID: {}, Sra 是否双端: {}", sra.getSraId(),sraDownloadDTO.getSra().isPaired());
                 outputQueue.put(sraDownloadDTO);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);

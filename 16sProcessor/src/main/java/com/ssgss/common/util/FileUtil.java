@@ -11,10 +11,6 @@ import java.nio.file.Paths;
 public class FileUtil {
     public static boolean createDirectory(File file) {
         String dirPath = file.getPath();
-        if(!file.isDirectory()){
-            log.error(String.format("并非文件夹: %s", dirPath));
-            return false;
-        }
         if (!file.exists()) {
             file.mkdir();
             return true; // 文件夹创建成功

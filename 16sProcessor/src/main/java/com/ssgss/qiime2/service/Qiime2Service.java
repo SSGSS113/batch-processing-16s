@@ -17,10 +17,15 @@ import com.ssgss.qiime2.factory.TaxonomyCommandFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 @Service
 @Slf4j
 public class Qiime2Service {
@@ -72,6 +77,7 @@ public class Qiime2Service {
 
     public static boolean doAlpha(SraQiime2DTO sra) throws SraException{
         boolean ans = true;
+        Map<String, String> alphaDivResults = new HashMap<>();
         for(AlphaConstant alpha : Qiime2Constant.alphaList){
             String type = alpha.getType();
             File outputPath = null;
@@ -81,25 +87,25 @@ public class Qiime2Service {
                     outputPath = new File(Qiime2FileConstant.SHANNON_PATH,
                             String.format("%s_%s.qza", sra.getSra().getSraId(), type));
                     tsvPath = new File(Qiime2FileConstant.SHANNON_TSV_PATH,
-                            String.format("%s_%s.tsv", sra.getSra().getSraId(), type));
+                            sra.getSra().getSraId());
                     break;
                 case "observed_features":
                     outputPath = new File(Qiime2FileConstant.OTU_PATH,
                             String.format("%s_%s.qza", sra.getSra().getSraId(), type));
                     tsvPath = new File(Qiime2FileConstant.OUT_TSV_PATH,
-                            String.format("%s_%s.tsv", sra.getSra().getSraId(), type));
+                            sra.getSra().getSraId());
                     break;
                 case "chao1":
                     outputPath = new File(Qiime2FileConstant.CHAO1_PATH,
                             String.format("%s_%s.qza", sra.getSra().getSraId(), type));
                     tsvPath = new File(Qiime2FileConstant.CHAO1_TSV_PATH,
-                            String.format("%s_%s.tsv", sra.getSra().getSraId(), type));
+                            sra.getSra().getSraId());
                     break;
                 case "simpson":
                     outputPath = new File(Qiime2FileConstant.SIMPSON_PATH,
                             String.format("%s_%s.qza", sra.getSra().getSraId(), type));
                     tsvPath = new File(Qiime2FileConstant.SIMPSON_TSV_PATH,
-                            String.format("%s_%s.tsv", sra.getSra().getSraId(), type));
+                            sra.getSra().getSraId());
                     break;
             }
             assert outputPath != null;
@@ -112,8 +118,32 @@ public class Qiime2Service {
             }
             doExport(sra, outputPath, tsvPath);
             ans = ans && result.isSucess();
+            File alpha_tsv = new File(tsvPath, "alpha-diversity.tsv");
+            String value = getAlphaValue(alpha_tsv);
+            alphaDivResults.put(alpha.getType(), value);
+        }
+        for(Map.Entry<String, String> entry : alphaDivResults.entrySet()){
+            CSVUtil.updateValueInCSV(Qiime2FileConstant.ALPHA_OUTPUT.getPath(),
+                    "SraId", sra.getSra().getSraId(),
+                    entry.getKey(), entry.getValue());
         }
         return ans;
+    }
+
+    private static String getAlphaValue(File file){
+        try (BufferedReader resultFile = new BufferedReader(new FileReader(file))) {
+            resultFile.readLine(); // 跳过标题行
+            String line = resultFile.readLine(); // 读取下一行
+            if (line != null) {
+                String[] values = line.trim().split("\t");
+                if (values.length > 1) {
+                    return values[1]; // 获取指定列的值
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private static void getManifest(SraQiime2DTO sra) throws SraException{
@@ -146,7 +176,7 @@ public class Qiime2Service {
 
     private static void doExport(SraQiime2DTO sra, File inputPath, File outputPath) throws SraException {
         Command command = ExportCommandFactory.getCommand(sra, inputPath.getPath(), outputPath.getPath());
-        if(outputPath.exists()){
+        if(!isEmpty(outputPath)){
             return;
         }
         Result result = command.execute();
@@ -159,5 +189,13 @@ public class Qiime2Service {
     }
     private static boolean isSuccess(Result result){
         return result != null && result.isSucess();
+    }
+    private static boolean isEmpty(File file){
+        if(file != null && file.isDirectory()){
+            File[] filse = file.listFiles();
+            return filse == null || filse.length <= 0;
+        }else{
+            return true;
+        }
     }
 }

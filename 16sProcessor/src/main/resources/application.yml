@@ -8,10 +8,10 @@ threadpool:
   taxonomyCores: 3
   keepAliveTime: 10
 file:
-  ALL_WORK_DIRECTORY: /data
-  FILES: /files
-  CLASSIFIER_PATH: /classifer
-  CSV_PATH: /csv
+  ALL_WORK_DIRECTORY: /data/test
+  FILES: /data/test/out
+  CLASSIFIER_PATH: /home/ssgss/下载/silva-138-99-nb-classifier.qza
+  CSV_PATH: /data/test.csv
 spring:
   main:
     web-application-type: none
