@@ -21,7 +21,11 @@ public class FastqcTask extends AbstractTask{
     @Override
     @ProcessTimer("Fastqc:doFastqc")
     public void run() {
+        log.info("Fastqc:doFastqc 步骤准备, Sra:{}, 处理线程: {}",
+                sra.getSra().getSraId(), Thread.currentThread().getName());
         if(FastqcService.doFastqc(sra)){
+            log.info("Fastqc:doFastqc 完成, Sra:{}, 处理线程: {}",
+                    sra.getSra().getSraId(), Thread.currentThread().getName());
             try {
                 log.info("完成了 SraId: {} 的质量控制", sra.getSra().getSraId());
                 outputQueue.put(sra);

@@ -4,9 +4,10 @@ import com.ssgss.common.aop.annotation.ProcessTimer;
 import com.ssgss.common.constant.BlockQueueConstant;
 import com.ssgss.qiime2.entity.SraQiime2DTO;
 import com.ssgss.qiime2.service.Qiime2Service;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.BlockingDeque;
-
+@Slf4j
 public class DenoiseTask extends AbstractTask{
     private final SraQiime2DTO sra;
     private static final BlockingDeque<Object> outputQueue = BlockQueueConstant.DENOISE_LIST;
@@ -19,7 +20,11 @@ public class DenoiseTask extends AbstractTask{
     @Override
     @ProcessTimer("Qiime2:getDenoise")
     public void run() {
+        log.info("Qiime2:getDenoise 步骤准备, Sra:{}, 处理线程: {}",
+                sra.getSra().getSraId(), Thread.currentThread().getName());
         if (Qiime2Service.doDenoise(sra)) {
+            log.info("Qiime2:getDenoise 完成, Sra:{}, 处理线程: {}",
+                    sra.getSra().getSraId(), Thread.currentThread().getName());
             try {
                 outputQueue.put(sra);
             } catch (InterruptedException e) {

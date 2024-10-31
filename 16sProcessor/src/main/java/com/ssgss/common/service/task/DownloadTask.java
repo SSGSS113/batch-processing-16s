@@ -26,14 +26,17 @@ public class DownloadTask extends AbstractTask{
     @Override
     @ProcessTimer("SraToolKit:downloadSra")
     public void run() {
+        log.info("SraToolKit:downloadSra 步骤准备, Sra:{}, 处理线程: {}",
+                sra.getSraId(), Thread.currentThread().getName());
         SraDownloadDTO sraDownloadDTO = new SraDownloadDTO();
-        File SraPath = new File(SraToolKitFileConstant.DOWNLOAD_DIRECTORY, String.format("%s.sra", sra.getSraId()));
+        File SraPath = new File(SraToolKitFileConstant.DOWNLOAD_DIRECTORY,
+                String.format("%s%s%s.sra", sra.getSraId(), File.separator, sra.getSraId()));
         sraDownloadDTO.setSra(sra);
         sraDownloadDTO.setSraPath(SraPath);
         if (SraToolKitService.downPrefetch(sraDownloadDTO)) {
-            sra.setPaired(SraToolKitService.isPaired(sraDownloadDTO));
+            log.info("SraToolKit:downloadSra 完成, Sra:{}, 处理线程: {}",
+                    sra.getSraId(), Thread.currentThread().getName());
             try {
-                log.info("下载完成 SraID: {}, Sra 是否双端: {}", sra.getSraId(),sraDownloadDTO.getSra().isPaired());
                 outputQueue.put(sraDownloadDTO);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);

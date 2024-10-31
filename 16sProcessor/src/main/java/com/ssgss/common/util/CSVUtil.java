@@ -185,4 +185,19 @@ public class CSVUtil {
 
         return updated; // 返回是否更新成功
     }
+
+    public static int countLines(String filePath) {
+        int lineCount = 0;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            while (br.readLine() != null) {
+                lineCount++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return lineCount;
+    }
+
 }

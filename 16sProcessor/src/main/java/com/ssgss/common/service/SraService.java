@@ -18,31 +18,33 @@ public class SraService {
         t1.start();
     }
     public void doDownload(){
-        new Performer(BlockQueueConstant.SRA_LIST, threadPoolControl.getDownloadPoll(),
-                "Download", DownloadTask.class).consume();
+        Thread t1 = new Thread(new Performer(BlockQueueConstant.SRA_LIST, threadPoolControl.getDownloadPoll(),
+                "Download", DownloadTask.class));
+        t1.start();
     }
     public void doFastqDump(){
-        new Performer(BlockQueueConstant.DOWNLOAD_LIST, threadPoolControl.getDumpPool(),
-                "Fastq_Dump", FastqDumpTask.class).consume();
+        new Thread(new Performer(BlockQueueConstant.DOWNLOAD_LIST, threadPoolControl.getDumpPool(),
+                "Fastq_Dump", FastqDumpTask.class)).start();
     }
     public void doFastqc(){
-        new Performer(BlockQueueConstant.FASTQ_DUMP, threadPoolControl.getFastqcPool(),
-                "Fastqc", FastqcTask.class).consume();
+        new Thread(new Performer(BlockQueueConstant.FASTQ_DUMP, threadPoolControl.getFastqcPool(),
+                "Fastqc", FastqcTask.class)).start();
+
     }
     public void doImport(){
-        new Performer(BlockQueueConstant.FASTQC_LIST, threadPoolControl.getImportPool(),
-                "Import", ImportTask.class).consume();
+        new Thread(new Performer(BlockQueueConstant.FASTQC_LIST, threadPoolControl.getImportPool(),
+                "Import", ImportTask.class)).start();
     }
     public void doDenoise(){
-        new Performer(BlockQueueConstant.IMPORT_LIST, threadPoolControl.getDenoisePool(),
-                "Denoise", DenoiseTask.class).consume();
+        new Thread(new Performer(BlockQueueConstant.IMPORT_LIST, threadPoolControl.getDenoisePool(),
+                "Denoise", DenoiseTask.class)).start();
     }
     public void doTaxonomy(){
-        new Performer(BlockQueueConstant.DENOISE_LIST, threadPoolControl.getTaxonomyPool(),
-                "Taxonomy", TaxonomyTask.class).consume();
+        new Thread(new Performer(BlockQueueConstant.DENOISE_LIST, threadPoolControl.getTaxonomyPool(),
+                "Taxonomy", TaxonomyTask.class)).start();
     }
     public void doAlpha(){
-        new Performer(BlockQueueConstant.DENOISE_LIST, threadPoolControl.getAlphaPool(),
-                "Alpha", AlphaTask.class).consume();
+        new Thread(new Performer(BlockQueueConstant.DENOISE_LIST, threadPoolControl.getAlphaPool(),
+                "Alpha", AlphaTask.class)).start();
     }
 }

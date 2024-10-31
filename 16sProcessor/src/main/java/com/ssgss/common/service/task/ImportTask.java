@@ -5,9 +5,10 @@ import com.ssgss.common.constant.BlockQueueConstant;
 import com.ssgss.common.entity.SraDTO;
 import com.ssgss.qiime2.entity.SraQiime2DTO;
 import com.ssgss.qiime2.service.Qiime2Service;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.BlockingDeque;
-
+@Slf4j
 public class ImportTask extends AbstractTask{
     private final SraDTO sra;
     private static final BlockingDeque<Object> outputQueue = BlockQueueConstant.IMPORT_LIST;
@@ -21,7 +22,11 @@ public class ImportTask extends AbstractTask{
     @ProcessTimer("Qiime2:doImport")
     public void run() {
         SraQiime2DTO sraQiime2DTO = new SraQiime2DTO(sra);
+        log.info("Qiime2:doImport 步骤准备, Sra:{}, 处理线程: {}",
+                sra.getSraId(), Thread.currentThread().getName());
         if (Qiime2Service.doImport(sraQiime2DTO)) {
+            log.info("Qiime2:doImport 完成, Sra:{}, 处理线程: {}",
+                    sra.getSraId(), Thread.currentThread().getName());
             try {
                 outputQueue.put(sraQiime2DTO);
             } catch (InterruptedException e) {

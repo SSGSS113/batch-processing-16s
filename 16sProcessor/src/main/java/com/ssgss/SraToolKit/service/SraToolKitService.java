@@ -1,5 +1,6 @@
 package com.ssgss.SraToolKit.service;
 
+import com.ssgss.SraToolKit.constant.SraToolKitFileConstant;
 import com.ssgss.SraToolKit.entity.SraDownloadDTO;
 import com.ssgss.SraToolKit.factory.FastqDumpCommandFactory;
 import com.ssgss.SraToolKit.factory.PrefetchCommandFactory;
@@ -7,12 +8,16 @@ import com.ssgss.SraToolKit.factory.VdbDumpCommandFactory;
 import com.ssgss.common.command.Command;
 import com.ssgss.common.constant.SraException;
 import com.ssgss.common.entity.Result;
+import com.ssgss.common.util.FileUtil;
+
+import java.io.File;
+import java.util.List;
 
 public class SraToolKitService {
     public static boolean isPaired(SraDownloadDTO sra) throws SraException {
-        Command command = VdbDumpCommandFactory.getCommand(sra);
-        Result result = command.execute();
-        return result.getText().equals("2");
+        List<File> files = FileUtil.searchFiles(SraToolKitFileConstant.DOWNLOAD_DIRECTORY, sra.getSra().getSraId());
+        int size = files.size();
+        return size == 3;
     }
 
     public static boolean downPrefetch(SraDownloadDTO sra) throws SraException {
