@@ -32,6 +32,10 @@ public class Qiime2Service {
     public static boolean doImport(SraQiime2DTO sra) throws SraException {
         sra.setDemux(new File(Qiime2FileConstant.DEMUX_PATH, String.format("%s_demux.qza", sra.getSra().getSraId())));
         getManifest(sra);
+        if(sra.getDemux().exists()){
+            log.info("{} 已经存在", sra.getDemux());
+            return true;
+        }
         Command command = ImportCommandFactory.getCommand(sra);
         Result result = command.execute();
         if(!isSuccess(result)){
@@ -46,6 +50,10 @@ public class Qiime2Service {
         sra.setRep(new File(Qiime2FileConstant.REP_PATH, String.format("%s_rep_seqs.qza", sra.getSra().getSraId())));
         sra.setTable(new File(Qiime2FileConstant.TABLE_PATH, String.format("%s_table.qza", sra.getSra().getSraId())));
         sra.setStats(new File(Qiime2FileConstant.STATS_PATH, String.format("%s_stats.qza", sra.getSra().getSraId())));
+        sra.setTaxonomy(new File(Qiime2FileConstant.TAXONOMY_PATH,
+                String.format("%s_taxonomy.qza", sra.getSra().getSraId())));
+        sra.setTaxonomy_tsv(new File(Qiime2FileConstant.TAXONOMY_TSV_PATH,
+                String.format("%s_taxonomy.tsv", sra.getSra().getSraId())));
         Command command = sra.getSra().isPaired()? PairedData2CommandFactory.getCommand(sra)
                 : SingleData2CommandFactory.getCommand(sra);
         Result result = command.execute();

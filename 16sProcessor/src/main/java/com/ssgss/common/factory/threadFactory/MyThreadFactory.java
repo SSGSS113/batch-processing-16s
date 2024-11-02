@@ -11,6 +11,6 @@ public class MyThreadFactory implements ThreadFactory {
     private final String namePrefix;
     @Override
     public Thread newThread(Runnable r) {
-        return new Thread(r, String.format(namePrefix, threadCount.incrementAndGet()));
+        return new Thread(r, namePrefix + '-' + threadCount.incrementAndGet());
     }
 }

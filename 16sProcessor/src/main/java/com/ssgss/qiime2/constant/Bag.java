@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum Bag {
-    Paired("PairedEndFastqManifestPhred33V2"), Single("PairedEndFastqManifestPhred33V2");
+    Paired("PairedEndFastqManifestPhred33V2"), Single("SingleEndFastqManifestPhred33V2");
     private final String bag;
     Bag(String bag){
         this.bag = bag;

@@ -7,6 +7,7 @@ import com.ssgss.common.constant.SraException;
 import com.ssgss.common.entity.Result;
 import jakarta.annotation.Resource;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -17,8 +18,9 @@ import java.util.List;
 
 @NoArgsConstructor
 @Service
+@Slf4j
 public abstract class AbstractCommand implements Command{
-    private Runtime runtime = Runtime.getRuntime();
+    private final Runtime runtime = Runtime.getRuntime();
     private File workingDirectory;
     private String command;
     public AbstractCommand(String command){
@@ -34,6 +36,7 @@ public abstract class AbstractCommand implements Command{
     @HandleException
     public Result execute() throws SraException {
         try {
+            log.info("命令内容: {} ,执行线程是: {}", command, Thread.currentThread().getName());
             Process process = runtime.exec(command, null, workingDirectory);
             // 读取并输出执行结果
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -42,20 +45,22 @@ public abstract class AbstractCommand implements Command{
             String outPutText;
             StringBuilder buffer = new StringBuilder();
             while ((line = reader.readLine()) != null) {
-                buffer.append(line);
+                buffer.append(line).append(System.lineSeparator());
             }
             String error;
             StringBuilder sb = new StringBuilder();
             while((line = stdError.readLine()) != null) {
-                sb.append(line);
+                sb.append(line).append(System.lineSeparator());
             }
             error = sb.toString();
             outPutText = buffer.toString();
             // 等待进程完成
             int exitCode = process.waitFor();
             if(exitCode == 0){
+                log.info(outPutText);
                 return new Result.Builder().setSucess(true).setText(outPutText).build();
             }else{
+                log.error(error);
                 throw new SraException(error);
             }
         } catch (Exception e) {

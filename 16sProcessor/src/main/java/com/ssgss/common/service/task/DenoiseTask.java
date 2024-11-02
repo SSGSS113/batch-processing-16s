@@ -2,10 +2,12 @@ package com.ssgss.common.service.task;
 
 import com.ssgss.common.aop.annotation.ProcessTimer;
 import com.ssgss.common.constant.BlockQueueConstant;
+import com.ssgss.qiime2.constant.Qiime2FileConstant;
 import com.ssgss.qiime2.entity.SraQiime2DTO;
 import com.ssgss.qiime2.service.Qiime2Service;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
 import java.util.concurrent.BlockingDeque;
 @Slf4j
 public class DenoiseTask extends AbstractTask{

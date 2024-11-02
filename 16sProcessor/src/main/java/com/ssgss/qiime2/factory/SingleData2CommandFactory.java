@@ -9,7 +9,7 @@ public class SingleData2CommandFactory {
     public static Command getCommand(SraQiime2DTO sra){
         return new SingleData2Command.Builder()
                 .addArg("--i-demultiplexed-seqs")
-                .addArg(sra.getTaxonomy().getPath())
+                .addArg(sra.getDemux().getPath())
                 .addArg("--p-n-threads")
                 .addArg(String.valueOf(Qiime2Constant.THREAD))
                 .addArg("--p-trim-left")

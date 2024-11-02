@@ -1,5 +1,7 @@
 package com.ssgss.common.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -7,7 +9,7 @@ import java.io.InputStreamReader;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
+@Slf4j
 public class FastQCAnalyzeUtil {
     public static int analyzeFastQC(File zipFile) throws IOException {
         // 打开zip文件
@@ -15,9 +17,9 @@ public class FastQCAnalyzeUtil {
             Enumeration<? extends ZipEntry> entries = zip.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
-                
+                log.info("bug定位{}", entry.getName());
                 // 找到目标文件 fastqc_data.txt
-                if (entry.getName().equals("fastqc_data.txt")) {
+                if (entry.getName().endsWith("fastqc_data.txt")) {
                     try (BufferedReader reader = new BufferedReader(new InputStreamReader(zip.getInputStream(entry)))) {
                         String line;
                         boolean isDataSection = false;
@@ -39,6 +41,7 @@ public class FastQCAnalyzeUtil {
                                 int base = Integer.parseInt(bases[0]);
                                 float tenthPercentile = Float.parseFloat(columns[5]);
                                 // 如果找到小于 20 的 10th Percentile，返回上一行的最右边的值
+                                log.info("fastqc 内部的 tenthPercentile = {} , base = {}", tenthPercentile, base);
                                 if (tenthPercentile < 20.0) {
                                     return maxBase;
                                 }

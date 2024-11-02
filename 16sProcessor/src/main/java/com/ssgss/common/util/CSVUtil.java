@@ -61,7 +61,7 @@ public class CSVUtil {
         for (int i = 0; i < values.size(); i++) {
             line.append(values.get(i) != null ? values.get(i) : ""); // 处理空值
             if (i < values.size() - 1) {
-                line.append(","); // 用逗号分隔值
+                line.append("\t"); // 用逗号分隔值
             }
         }
         line.append("\n");

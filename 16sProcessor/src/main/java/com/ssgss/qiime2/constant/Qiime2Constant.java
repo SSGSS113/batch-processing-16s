@@ -9,7 +9,6 @@ import java.util.List;
 public final class Qiime2Constant {
     private static final Runtime runtime = Runtime.getRuntime();
     public static final int THREAD;
-    public static File CLASSIFIER_PATH;
     public static final String IMPORT_BASELINE = "qiime tools import";
     public static final String SINGLE_DATA2_BASELINE = "qiime dada2 denoise-single";
     public static final String PAIRED_DATA2_BASELINE = "qiime dada2 denoise-paired";

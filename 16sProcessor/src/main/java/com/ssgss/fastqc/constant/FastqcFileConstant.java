@@ -6,9 +6,9 @@ import com.ssgss.common.util.FileUtil;
 import java.io.File;
 
 public final class FastqcFileConstant {
-    public static final File WORK_DIRECTORY;
+    public static final File FASTQC_PATH;
     static {
-        WORK_DIRECTORY = new File(FileConstant.getWorkDirectory(), "Fastqc");
-        FileUtil.createDirectory(WORK_DIRECTORY);
+        FASTQC_PATH = new File(FileConstant.getWorkDirectory(), "Fastqc");
+        FileUtil.createDirectory(FASTQC_PATH);
     }
 }

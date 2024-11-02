@@ -5,6 +5,9 @@ import com.ssgss.SraToolKit.entity.SraDownloadDTO;
 import com.ssgss.SraToolKit.service.SraToolKitService;
 import com.ssgss.common.aop.annotation.ProcessTimer;
 import com.ssgss.common.constant.BlockQueueConstant;
+import com.ssgss.common.util.FileUtil;
+import com.ssgss.fastqc.constant.FastqcFileConstant;
+import com.ssgss.fastqc.entity.FastqcRequest;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -49,7 +52,12 @@ public class FastqDumpTask extends AbstractTask{
             try {
                 log.info("分割了 SraID: {}, 该样品为{}",
                         sra.getSra().getSraId(),sra.getSra().isPaired()?"双端队列":"单端序列");
-                outputQueue.put(sra.getSra());
+                FastqcRequest fastqcRequest = new FastqcRequest();
+                fastqcRequest.setSra(sra.getSra());
+                File outputPath = new File(FastqcFileConstant.FASTQC_PATH, sra.getSra().getSraId());
+                fastqcRequest.setOutPutPath(outputPath);
+                FileUtil.createDirectory(outputPath);
+                outputQueue.put(fastqcRequest);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

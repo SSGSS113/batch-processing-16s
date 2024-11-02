@@ -6,6 +6,7 @@ import com.ssgss.fastqc.entity.FastqcRequest;
 import com.ssgss.fastqc.service.FastqcService;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
 import java.util.concurrent.BlockingDeque;
 
 @Slf4j
@@ -27,8 +28,7 @@ public class FastqcTask extends AbstractTask{
             log.info("Fastqc:doFastqc 完成, Sra:{}, 处理线程: {}",
                     sra.getSra().getSraId(), Thread.currentThread().getName());
             try {
-                log.info("完成了 SraId: {} 的质量控制", sra.getSra().getSraId());
-                outputQueue.put(sra);
+                outputQueue.put(sra.getSra());
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

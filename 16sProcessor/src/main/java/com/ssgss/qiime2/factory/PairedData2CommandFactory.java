@@ -9,7 +9,7 @@ public class PairedData2CommandFactory {
     public static Command getCommand(SraQiime2DTO sra){
         return new PairedData2Command.Builder()
                 .addArg("--i-demultiplexed-seqs")
-                .addArg(sra.getTaxonomy().getPath())
+                .addArg(sra.getDemux().getPath())
                 .addArg("--p-n-threads")
                 .addArg(String.valueOf(Qiime2Constant.THREAD))
                 .addArg("--p-trim-left-f")

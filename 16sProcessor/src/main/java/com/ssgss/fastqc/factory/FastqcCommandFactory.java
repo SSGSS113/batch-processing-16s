@@ -11,15 +11,15 @@ public class FastqcCommandFactory {
         if(request.getSra().isPaired()) {
             return new FastqcCommand.Builder()
                     .addArg("-o")
+                    .addArg(request.getOutPutPath().getPath())
                     .addArg(request.getSra().getLeftPath().getPath())
                     .addArg(request.getSra().getRightPath().getPath())
-                    .addArg(request.getOutPutPath().getPath())
                     .build();
         }else{
             return new FastqcCommand.Builder()
                     .addArg("-o")
-                    .addArg(request.getSra().getLeftPath().getPath())
                     .addArg(request.getOutPutPath().getPath())
+                    .addArg(request.getSra().getLeftPath().getPath())
                     .build();
         }
     }

@@ -64,7 +64,7 @@ public class FileUtil {
 
     private static void searchFilesRecursive(File directory, String pattern, List<File> matchingFiles) {
         File[] files = directory.listFiles();
-
+        log.info("CSVUtil Files = {}" , files);
         if (files != null) {
             for (File file : files) {
                 // 使用通配符进行匹配
