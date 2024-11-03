@@ -26,6 +26,7 @@ public class DownloadTask extends AbstractTask{
     @Override
     @ProcessTimer("SraToolKit:downloadSra")
     public void run() {
+        log.info("{} 执行了", super.getName());
         log.info("SraToolKit:downloadSra 步骤准备, Sra:{}, 处理线程: {}",
                 sra.getSraId(), Thread.currentThread().getName());
         SraDownloadDTO sraDownloadDTO = new SraDownloadDTO();

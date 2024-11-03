@@ -25,6 +25,7 @@ public class ImportTask extends AbstractTask{
     @Override
     @ProcessTimer("Qiime2:doImport")
     public void run() {
+        log.info("{} 执行了", super.getName());
         SraQiime2DTO sraQiime2DTO = new SraQiime2DTO(sra);
         sraQiime2DTO.setType(sra.isPaired()? SampleData.Paired : SampleData.Single);
         sraQiime2DTO.setBag(sra.isPaired()? Bag.Paired : Bag.Single);

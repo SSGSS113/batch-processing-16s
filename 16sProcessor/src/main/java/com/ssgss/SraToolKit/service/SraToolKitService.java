@@ -34,7 +34,7 @@ public class SraToolKitService {
             if(!isSuccess(result)){
                 throw new SraException(String.format("Prefetch发生异常, sra = %s",sra.getSra().getSraId()));
             }
-        return result.isSucess();
+        return true;
     }
 
     public static boolean doFastqDump(SraDownloadDTO sra) throws SraException {

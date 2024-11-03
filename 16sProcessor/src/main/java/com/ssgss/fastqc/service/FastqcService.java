@@ -18,16 +18,6 @@ import java.util.Objects;
 @Slf4j
 public class FastqcService {
     public static boolean doFastqc(FastqcRequest request) {
-        if(Objects.requireNonNull(request.getOutPutPath().listFiles()).length > 0){
-            log.info("{} 中fastqc文件已存在", request.getOutPutPath());
-            return true;
-        }
-        Command command = FastqcCommandFactory.getCommand(request);
-        Result result = command.execute();
-        if(!isSuccess(result)){
-            log.error(String.format("Fastqc发生错误，sra = %s",request.getSra().getSraId()));
-            throw new SraException(String.format("Fastqc发生错误，sra = %s",request.getSra().getSraId()));
-        }
         if(request.getSra().isPaired()){
             File fastqc_output_1 = new File(request.getOutPutPath(),
                     String.format("%s_1_fastqc.zip", request.getSra().getSraId()));
@@ -40,6 +30,17 @@ public class FastqcService {
                     String.format("%s_fastqc.zip", request.getSra().getSraId()));
             request.setFastqc_output_1(fastqc_output_1);
         }
+        if(Objects.requireNonNull(request.getOutPutPath().listFiles()).length > 0){
+            log.info("{} 中fastqc文件已存在", request.getOutPutPath());
+            recordLength(request);
+            return true;
+        }
+        Command command = FastqcCommandFactory.getCommand(request);
+        Result result = command.execute();
+        if(!isSuccess(result)){
+            log.error(String.format("Fastqc发生错误，sra = %s",request.getSra().getSraId()));
+            throw new SraException(String.format("Fastqc发生错误，sra = %s",request.getSra().getSraId()));
+        }
         recordLength(request);
         return result.isSucess();
     }
@@ -50,7 +51,9 @@ public class FastqcService {
         }else{
             try {
                 log.info("分析 {}", request.getFastqc_output_1());
-                int leftLen = FastQCAnalyzeUtil.analyzeFastQC(request.getFastqc_output_1());
+                int len = FastQCAnalyzeUtil.analyzeFastQC(request.getFastqc_output_1());
+                int leftLen = Math.max(len, 150);
+                leftLen = Math.min(leftLen, 300);
                 request.getSra().setLeftLen(leftLen);
                 log.info("sra: {} 的 fastqc 分析的 leftLen 的值为 {}", request.getSra().getSraId(), leftLen);
             } catch (IOException e) {
@@ -63,7 +66,9 @@ public class FastqcService {
             }else{
                 try {
                     log.info("分析 {}", request.getFastqc_output_2());
-                    int rightLen = FastQCAnalyzeUtil.analyzeFastQC(request.getFastqc_output_2());
+                    int len = FastQCAnalyzeUtil.analyzeFastQC(request.getFastqc_output_2());
+                    int rightLen = Math.max(len, 100);
+                    rightLen = Math.min(rightLen, 300);
                     request.getSra().setRightLen(rightLen);
                     log.info("sra: {} 的 fastqc 分析的 rightLen 的值为 {}", request.getSra().getSraId(), rightLen);
                 } catch (IOException e) {

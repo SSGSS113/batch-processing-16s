@@ -2,13 +2,14 @@ package com.ssgss.common.util;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 @Slf4j
 public class FileUtil {
@@ -74,6 +75,30 @@ public class FileUtil {
                     matchingFiles.add(file);
                 }
             }
+        }
+    }
+
+    public static void unzip(File zipPath, String destDir) throws IOException {
+        log.info("解压 {}, 解压到 {}", zipPath.getPath(), destDir);
+        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipPath))) {
+            ZipEntry entry;
+            while ((entry = zis.getNextEntry()) != null) {
+                File outFile = new File(destDir, entry.getName());
+                if (entry.isDirectory()) {
+                    outFile.mkdirs();
+                } else {
+                    outFile.getParentFile().mkdirs();
+                    try (FileOutputStream fos = new FileOutputStream(outFile)) {
+                        byte[] buffer = new byte[1024];
+                        int len;
+                        while ((len = zis.read(buffer)) != -1) {
+                            fos.write(buffer, 0, len);
+                        }
+                    }
+                }
+                zis.closeEntry();
+            }
+            log.info("解压完成，解压到 {}", destDir);
         }
     }
 

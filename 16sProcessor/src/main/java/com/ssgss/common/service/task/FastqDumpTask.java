@@ -26,6 +26,7 @@ public class FastqDumpTask extends AbstractTask{
     @Override
     @ProcessTimer("SraToolKit:doFastDump")
     public void run() {
+        log.info("{} 执行了", super.getName());
         log.info("SraToolKit:doFastDump 步骤准备, Sra:{}, 处理线程: {}",
                 sra.getSra().getSraId(), Thread.currentThread().getName());
         if (SraToolKitService.doFastqDump(sra)) {

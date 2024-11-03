@@ -20,6 +20,7 @@ public class AlphaTask extends AbstractTask{
     @Override
     @ProcessTimer("Qiime2:getAlpha")
     public void run() {
+        log.info("{} 执行了", super.getName());
         log.info("Qiime2:getAlpha 步骤完成, Sra:{}, 处理线程: {}",
                 sra.getSra().getSraId(), Thread.currentThread().getName());
         if (Qiime2Service.doAlpha(sra)) {

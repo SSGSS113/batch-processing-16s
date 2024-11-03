@@ -57,7 +57,6 @@ public abstract class AbstractCommand implements Command{
             // 等待进程完成
             int exitCode = process.waitFor();
             if(exitCode == 0){
-                log.info(outPutText);
                 return new Result.Builder().setSucess(true).setText(outPutText).build();
             }else{
                 log.error(error);

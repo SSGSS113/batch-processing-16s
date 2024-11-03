@@ -12,7 +12,7 @@ public final class Qiime2Constant {
     public static final String IMPORT_BASELINE = "qiime tools import";
     public static final String SINGLE_DATA2_BASELINE = "qiime dada2 denoise-single";
     public static final String PAIRED_DATA2_BASELINE = "qiime dada2 denoise-paired";
-    public static final String TAXONOMY_BASELINE = "qiime feature-classifier classify-sklearn";
+    public static final String TAXONOMY_BASELINE = "qiime feature-classifier";
     public static final String ALPHA_DIV_BASELINE = "qiime diversity alpha";
     public static final String EXPORT_BASELINE = "qiime tools export";
     public static final List<AlphaConstant> alphaList;

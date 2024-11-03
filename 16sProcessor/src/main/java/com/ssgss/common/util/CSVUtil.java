@@ -1,11 +1,18 @@
 package com.ssgss.common.util;
 
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvException;
+import com.ssgss.common.constant.SraException;
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.*;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 
+@Slf4j
 public class CSVUtil {
-
+    private static ReentrantLock alpha_lock = new ReentrantLock();
     /**
      * 创建一个新的CSV文件，并写入表头
      *
@@ -13,10 +20,10 @@ public class CSVUtil {
      * @param headers  表头列表
      * @throws IOException 如果创建文件或写入时发生IO异常
      */
-    public static void createCSV(String filePath, List<String> headers) throws IOException {
+    public static void createCSV(String filePath, List<String> headers, char sep) throws IOException {
         try (FileWriter writer = new FileWriter(filePath)) {
             // 写入表头
-            writeLine(writer, headers);
+            writeLine(writer, headers, sep);
         }
     }
 
@@ -27,10 +34,10 @@ public class CSVUtil {
      * @param data     要添加的数据列表
      * @throws IOException 如果写入时发生IO异常
      */
-    public static void addDataToCSV(String filePath, List<String> data) throws IOException {
+    public static void addDataToCSV(String filePath, List<String> data, char sep) throws IOException {
         try (FileWriter writer = new FileWriter(filePath, true)) {
             // 添加数据
-            writeLine(writer, data);
+            writeLine(writer, data, sep);
         }
     }
 
@@ -42,10 +49,11 @@ public class CSVUtil {
      * @param data     要添加的数据，使用表头名称作为键
      * @throws IOException 如果写入时发生IO异常
      */
-    public static void addDataToCSV(String filePath, List<String> headers, Map<String, String> data) throws IOException {
+    public static void addDataToCSV(String filePath, List<String> headers,
+                                    Map<String, String> data, char rep) throws IOException {
         try (FileWriter writer = new FileWriter(filePath, true)) {
             // 生成与表头顺序一致的行数据
-            writeLine(writer, headers, data);
+            writeLine(writer, headers, data, rep);
         }
     }
 
@@ -56,12 +64,12 @@ public class CSVUtil {
      * @param values 要写入的数据列表
      * @throws IOException 如果写入时发生IO异常
      */
-    private static void writeLine(FileWriter writer, List<String> values) throws IOException {
+    private static void writeLine(FileWriter writer, List<String> values, char sep) throws IOException {
         StringBuilder line = new StringBuilder();
         for (int i = 0; i < values.size(); i++) {
             line.append(values.get(i) != null ? values.get(i) : ""); // 处理空值
             if (i < values.size() - 1) {
-                line.append("\t"); // 用逗号分隔值
+                line.append(sep); // 用逗号分隔值
             }
         }
         line.append("\n");
@@ -76,14 +84,15 @@ public class CSVUtil {
      * @param data    要写入的数据，使用Map映射表头到数据值
      * @throws IOException 如果写入时发生IO异常
      */
-    private static void writeLine(FileWriter writer, List<String> headers, Map<String, String> data) throws IOException {
+    private static void writeLine(FileWriter writer, List<String> headers,
+                                  Map<String, String> data, char rep) throws IOException {
         StringBuilder line = new StringBuilder();
         for (int i = 0; i < headers.size(); i++) {
             String header = headers.get(i);
             String value = data.getOrDefault(header, ""); // 如果没有对应的值，填入空字符串
             line.append(value);
             if (i < headers.size() - 1) {
-                line.append(","); // 用逗号分隔值
+                line.append(rep); // 用逗号分隔值
             }
         }
         line.append("\n");
@@ -134,56 +143,57 @@ public class CSVUtil {
         return result; // 返回结果，如果为空则返回null
     }
 
-    public static boolean updateValueInCSV(String filePath, String filterColumn, String filterValue, String targetColumn, String newValue) {
-        StringBuilder updatedContent = new StringBuilder();
-        boolean updated = false;
-
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String headerLine = br.readLine();
-            updatedContent.append(headerLine).append(",").append("NewColumn").append("\n"); // 新增一列的表头
-
-            String[] headers = headerLine.split(",");
-            int filterColumnIndex = -1;
-            int targetColumnIndex = -1;
-
-            // 找到过滤列和目标列的索引
-            for (int i = 0; i < headers.length; i++) {
-                if (headers[i].trim().equalsIgnoreCase(filterColumn)) {
-                    filterColumnIndex = i;
-                }
-                if (headers[i].trim().equalsIgnoreCase(targetColumn)) {
-                    targetColumnIndex = i;
-                }
+    public static void modifyCSV(String filePath, String keyColumn, String keyValue,
+                                 String modifyColumn, String modifyValue) throws IOException {
+        // 读取 CSV 文件
+        CSVReader csvReader = new CSVReader(new FileReader(filePath));
+        List<String[]> data = null;
+        try {
+            data = csvReader.readAll();
+        } catch (CsvException e) {
+            throw new RuntimeException(e);
+        }
+        csvReader.close();
+        for(String[] s : data){
+            for(String t : s){
+                System.out.print(t + " ");
             }
-
-            if (filterColumnIndex == -1 || targetColumnIndex == -1) {
-                return false; // 过滤列或目标列不存在
+            System.out.println();
+        }
+        // 找到标定列的索引
+        String[] header = data.get(0);
+        int keyColumnIndex = -1;
+        int modifyColumnIndex = -1;
+        log.info("keyColumn = {}, modifyColumn = {}", keyColumn, modifyColumn);
+        // 获取列索引
+        for (int i = 0; i < header.length; i++) {
+            log.info("header[{}] = {}, keyColumn = {}, modifyColumn = {}",
+                    i,header[i], keyColumn, modifyColumn);
+            if (header[i].trim().equalsIgnoreCase(keyColumn.trim())) {
+                keyColumnIndex = i;
             }
-
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                if (values.length > filterColumnIndex && values[filterColumnIndex].trim().equals(filterValue)) {
-                    if (values.length > targetColumnIndex) {
-                        updatedContent.append(line).append(",").append(newValue).append("\n");
-                        updated = true;
-                    }
-                } else {
-                    updatedContent.append(line).append(",").append("\n"); // 其他行直接追加
-                }
+            if (header[i].trim().equalsIgnoreCase(modifyColumn.trim())) {
+                modifyColumnIndex = i;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
-        // 写入更新后的内容到新文件
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
-            bw.write(updatedContent.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
+        // 如果找不到指定的列，抛出异常
+        if (keyColumnIndex == -1 || modifyColumnIndex == -1) {
+            throw new IllegalArgumentException("指定的列名不存在");
         }
 
-        return updated; // 返回是否更新成功
+        // 修改数据
+        for (String[] row : data) {
+            if (row[keyColumnIndex].trim().equalsIgnoreCase(keyValue.trim())) {
+                row[modifyColumnIndex] = modifyValue;
+                break; // 找到并修改后退出
+            }
+        }
+
+        // 写回 CSV 文件
+        CSVWriter csvWriter = new CSVWriter(new FileWriter(filePath));
+        csvWriter.writeAll(data);
+        csvWriter.close();
     }
 
     public static int countLines(String filePath) {
@@ -199,5 +209,49 @@ public class CSVUtil {
 
         return lineCount;
     }
+    public static List<String> getHeader(File filePath ,String rep){
+        try(BufferedReader reader = new BufferedReader(new FileReader(filePath))){
+            List<String> ans = new ArrayList<>();
+            String line = reader.readLine();
+            if(line != null){
+                String[] headers = line.split(rep);
+                ans.addAll(Arrays.asList(headers));
+            }
+            return ans;
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    public static void addValueByHeader(File file, String value, String header, char rep) throws IOException{
+        try(FileWriter writer = new FileWriter(file, true)) {
+            Map<String, String> maps = new HashMap<>();
+            maps.put(header, value);
+            writeLine(writer,getHeader(file, String.valueOf(rep)), maps, rep);
+        }
+    }
+    public static boolean findValueByHeader(File file, String value, String header) throws IOException {
+        try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            List<String> headers = getHeader(file, ",");
+            int index = -1;
+            for(int i = 0;i<headers.size();i++){
+                if(headers.get(i).trim().equalsIgnoreCase(header.trim())){
+                    index = i;
+                }
+            }
+            if(index == -1){
+                log.error("{} 中不存在对应的 header:{}",file.getPath(), header);
+                return false;
+            }
+            String line;
+            while((line = reader.readLine()) != null){
+                if(line.split(",")[index].trim().equalsIgnoreCase(value.trim())){
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 }

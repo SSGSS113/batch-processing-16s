@@ -20,6 +20,7 @@ public class TaxonomyTask extends AbstractTask{
     @Override
     @ProcessTimer("Qiime2:doTaxonomy")
     public void run() {
+        log.info("{} 执行了", super.getName());
         log.info("Qiime2:doTaxonomy 步骤准备, Sra:{}, 处理线程: {}",
                 sra.getSra().getSraId(), Thread.currentThread().getName());
         if (Qiime2Service.doClassify(sra)) {

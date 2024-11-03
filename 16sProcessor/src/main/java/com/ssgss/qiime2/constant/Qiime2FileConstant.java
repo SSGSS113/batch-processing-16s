@@ -41,7 +41,7 @@ public final class Qiime2FileConstant {
         FileUtil.createDirectory(STATS_PATH);
         TABLE_PATH = new File(FileConstant.getWorkDirectory(), "table");
         FileUtil.createDirectory(TABLE_PATH);
-        TAXONOMY_PATH = new File(FileConstant.getWorkDirectory(), "taonomy");
+        TAXONOMY_PATH = new File(FileConstant.getWorkDirectory(), "taxonomy");
         FileUtil.createDirectory(TAXONOMY_PATH);
         ALPHA_PATH = new File(FileConstant.getWorkDirectory(), "alpha");
         FileUtil.createDirectory(ALPHA_PATH);
@@ -73,7 +73,7 @@ public final class Qiime2FileConstant {
         headers.add(AlphaConstant.CHAO1.getType());
         headers.add(AlphaConstant.SHANNON.getType());
         try {
-            CSVUtil.createCSV(ALPHA_OUTPUT.getPath(),headers);
+            CSVUtil.createCSV(ALPHA_OUTPUT.getPath(),headers, ',');
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
