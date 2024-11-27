@@ -1,10 +1,7 @@
 package com.ssgss.qiime2.command;
 
 import com.ssgss.common.command.AbstractCommand;
-import com.ssgss.fastqc.command.FastqcCommand;
 import com.ssgss.qiime2.constant.Qiime2Constant;
-
-import java.io.File;
 
 public class ImportCommand extends AbstractCommand {
     public ImportCommand(String command){

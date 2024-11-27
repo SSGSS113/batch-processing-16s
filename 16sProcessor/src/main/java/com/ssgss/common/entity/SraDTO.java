@@ -1,9 +1,5 @@
 package com.ssgss.common.entity;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.io.File;
 
 public class SraDTO {

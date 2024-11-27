@@ -10,11 +10,9 @@ public final class FileConstant {
     private static File FILES;
     private static File CLASSIFIER;
     private static File CSV_PATH;
-
     public static File getWorkDirectory() {
         return WORK_DIRECTORY;
     }
-
     public static void setWorkDirectory(File workDirectory) {
         log.info(String.format("workDirectory 设置为: %s", workDirectory.getPath()));
         WORK_DIRECTORY = workDirectory;

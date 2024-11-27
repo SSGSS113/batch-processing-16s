@@ -1,8 +1,8 @@
 package com.ssgss.fastqc.entity;
 
 import com.ssgss.common.entity.SraDTO;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.NonNull;
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.io.File;
 
@@ -10,6 +10,7 @@ public class FastqcRequest {
     private File outPutPath;
     private File fastqc_output_1;
     private File fastqc_output_2;
+    @NotNull
     private SraDTO sra;
 
     public File getOutPutPath() {

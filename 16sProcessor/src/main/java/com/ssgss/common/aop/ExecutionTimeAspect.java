@@ -22,7 +22,7 @@ public class ExecutionTimeAspect {
     @Pointcut("@annotation(com.ssgss.common.aop.annotation.ProcessTimer)")
     private void pointcut(){}
     // 存储方法的总耗时和调用次数
-    private Map<String, ExecutionStats> executionStatsMap = new HashMap<>();
+    private final Map<String, ExecutionStats> executionStatsMap = new HashMap<>();
     @Around("pointcut()")
     public Object measureExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         String methodName = joinPoint.getSignature().getName();

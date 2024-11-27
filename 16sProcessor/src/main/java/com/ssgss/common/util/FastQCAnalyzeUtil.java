@@ -1,12 +1,11 @@
 package com.ssgss.common.util;
 
-import com.ssgss.fastqc.constant.FastqcFileConstant;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.*;
-import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 @Slf4j
 public class FastQCAnalyzeUtil {
     public static int analyzeFastQC(File zipFile) throws IOException {

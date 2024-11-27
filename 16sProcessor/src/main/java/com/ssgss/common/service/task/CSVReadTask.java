@@ -3,10 +3,8 @@ package com.ssgss.common.service.task;
 import com.ssgss.common.aop.annotation.ProcessTimer;
 import com.ssgss.common.constant.BlockQueueConstant;
 import com.ssgss.common.constant.CommonConstant;
-import com.ssgss.common.constant.FileConstant;
 import com.ssgss.common.constant.SraException;
 import com.ssgss.common.entity.SraDTO;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
@@ -48,15 +46,17 @@ public class CSVReadTask implements Runnable{
                 sra.setLeftTrim(forwardPrimer == null ? 20 : forwardPrimer.length());
                 sra.setRightTrim(reversePrimer == null ? 20 : reversePrimer.length());
                 outputQueue.put(sra);
-                log.info("CSV 文件读取了 SraId: {}, 已放入阻塞队列: {}", sra.getSraId(), outputQueue);
+                log.info("CSV 文件读取了 SraId: {}, 已放入阻塞队列", sra.getSraId());
             }
             CommonConstant.NUM = len;
         } catch (IOException e) {
             log.error("CSV 文件: {} 出错了", CSV.getPath());
             throw new SraException(String.format("CSV 文件: %s 出错了",CSV.getPath()));
         } catch (InterruptedException e) {
-
-
+            log.error("CSV 文件读取被打断");
+        } finally {
+            log.info("====================================  一共有 {} 条数据  ==========================================",
+                    CommonConstant.NUM);
         }
     }
 }

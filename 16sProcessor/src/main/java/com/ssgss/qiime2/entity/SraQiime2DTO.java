@@ -98,6 +98,25 @@ public class SraQiime2DTO {
     private File stats;
     private File taxonomy;
     private File taxonomy_tsv;
+    private File table_biom;
+    private File table_tsv;
+
+    public File getTable_biom() {
+        return table_biom;
+    }
+
+    public void setTable_biom(File table_biom) {
+        this.table_biom = table_biom;
+    }
+
+    public File getTable_tsv() {
+        return table_tsv;
+    }
+
+    public void setTable_tsv(File table_tsv) {
+        this.table_tsv = table_tsv;
+    }
+
     public SraQiime2DTO(SraDTO sra){
         this.sra = sra;
     }

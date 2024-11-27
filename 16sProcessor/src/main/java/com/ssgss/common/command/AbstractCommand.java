@@ -1,11 +1,9 @@
 package com.ssgss.common.command;
 
 import com.ssgss.common.aop.annotation.HandleException;
-import com.ssgss.common.configration.FileConfig;
 import com.ssgss.common.constant.FileConstant;
 import com.ssgss.common.constant.SraException;
 import com.ssgss.common.entity.Result;
-import jakarta.annotation.Resource;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,7 +32,7 @@ public abstract class AbstractCommand implements Command{
 
     @Override
     @HandleException
-    public Result execute() throws SraException {
+    public Result execute() throws SraException{
         try {
             log.info("命令内容: {} ,执行线程是: {}", command, Thread.currentThread().getName());
             Process process = runtime.exec(command, null, workingDirectory);
@@ -60,7 +58,7 @@ public abstract class AbstractCommand implements Command{
                 return new Result.Builder().setSucess(true).setText(outPutText).build();
             }else{
                 log.error(error);
-                throw new SraException(error);
+                return new Result.Builder().setSucess(false).setText(error).build();
             }
         } catch (Exception e) {
             throw new SraException(e);

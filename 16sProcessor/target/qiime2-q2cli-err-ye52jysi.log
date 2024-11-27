@@ -1,0 +1,53 @@
+Running external command line application(s). This may print messages to stdout and/or stderr.
+The command(s) being run are below. These commands cannot be manually re-run as they will depend on temporary files that no longer exist.
+
+Command: run_dada.R --input_directory /tmp/qiime2/liangtian/data/b3d7ce36-69e3-45b4-9cf6-de78194b32f2/data --output_path /tmp/tmpnlnnhqnl/output.tsv.biom --output_track /tmp/tmpnlnnhqnl/track.tsv --filtered_directory /tmp/tmpnlnnhqnl --truncation_length 300 --trim_left 19 --max_expected_errors 2.0 --truncation_quality_score 2 --max_length Inf --pooling_method independent --chimera_method consensus --min_parental_fold 1.0 --allow_one_off False --num_threads 5 --learn_min_reads 1000000 --homopolymer_gap_penalty NULL --band_size 16
+
+Warning message:
+package ‘optparse’ was built under R version 4.2.3 
+R version 4.2.2 (2022-10-31) 
+Loading required package: Rcpp
+DADA2: 1.26.0 / Rcpp: 1.0.11 / RcppParallel: 5.1.6 
+2) Filtering .
+3) Learning Error Rates
+399020 total bases in 1420 reads from 1 samples will be used for learning the error rates.
+Error rates could not be estimated (this is usually because of very few reads).
+Error in getErrors(err, enforce = TRUE) : Error matrix is NULL.
+6: stop("Error matrix is NULL.")
+5: getErrors(err, enforce = TRUE)
+4: dada(drps, err = NULL, errorEstimationFunction = errorEstimationFunction, 
+       selfConsist = TRUE, multithread = multithread, verbose = verbose, 
+       MAX_CONSIST = MAX_CONSIST, OMEGA_C = OMEGA_C, ...)
+3: learnErrors(filts, nreads = nreads.learn, multithread = multithread, 
+       HOMOPOLYMER_GAP_PENALTY = HOMOPOLYMER_GAP_PENALTY, BAND_SIZE = BAND_SIZE)
+2: withCallingHandlers(expr, warning = function(w) if (inherits(w, 
+       classes)) tryInvokeRestart("muffleWarning"))
+1: suppressWarnings(learnErrors(filts, nreads = nreads.learn, multithread = multithread, 
+       HOMOPOLYMER_GAP_PENALTY = HOMOPOLYMER_GAP_PENALTY, BAND_SIZE = BAND_SIZE))
+Traceback (most recent call last):
+  File "/home/liangtian/.conda/envs/qiime2-amplicon-2023.9/lib/python3.8/site-packages/q2_dada2/_denoise.py", line 220, in _denoise_single
+    run_commands([cmd])
+  File "/home/liangtian/.conda/envs/qiime2-amplicon-2023.9/lib/python3.8/site-packages/q2_dada2/_denoise.py", line 36, in run_commands
+    subprocess.run(cmd, check=True)
+  File "/home/liangtian/.conda/envs/qiime2-amplicon-2023.9/lib/python3.8/subprocess.py", line 516, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['run_dada.R', '--input_directory', '/tmp/qiime2/liangtian/data/b3d7ce36-69e3-45b4-9cf6-de78194b32f2/data', '--output_path', '/tmp/tmpnlnnhqnl/output.tsv.biom', '--output_track', '/tmp/tmpnlnnhqnl/track.tsv', '--filtered_directory', '/tmp/tmpnlnnhqnl', '--truncation_length', '300', '--trim_left', '19', '--max_expected_errors', '2.0', '--truncation_quality_score', '2', '--max_length', 'Inf', '--pooling_method', 'independent', '--chimera_method', 'consensus', '--min_parental_fold', '1.0', '--allow_one_off', 'False', '--num_threads', '5', '--learn_min_reads', '1000000', '--homopolymer_gap_penalty', 'NULL', '--band_size', '16']' returned non-zero exit status 1.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/liangtian/.conda/envs/qiime2-amplicon-2023.9/lib/python3.8/site-packages/q2cli/commands.py", line 520, in __call__
+    results = self._execute_action(
+  File "/home/liangtian/.conda/envs/qiime2-amplicon-2023.9/lib/python3.8/site-packages/q2cli/commands.py", line 581, in _execute_action
+    results = action(**arguments)
+  File "<decorator-gen-70>", line 2, in denoise_single
+  File "/home/liangtian/.conda/envs/qiime2-amplicon-2023.9/lib/python3.8/site-packages/qiime2/sdk/action.py", line 342, in bound_callable
+    outputs = self._callable_executor_(
+  File "/home/liangtian/.conda/envs/qiime2-amplicon-2023.9/lib/python3.8/site-packages/qiime2/sdk/action.py", line 566, in _callable_executor_
+    output_views = self._callable(**view_args)
+  File "/home/liangtian/.conda/envs/qiime2-amplicon-2023.9/lib/python3.8/site-packages/q2_dada2/_denoise.py", line 244, in denoise_single
+    return _denoise_single(
+  File "/home/liangtian/.conda/envs/qiime2-amplicon-2023.9/lib/python3.8/site-packages/q2_dada2/_denoise.py", line 229, in _denoise_single
+    raise Exception("An error was encountered while running DADA2"
+Exception: An error was encountered while running DADA2 in R (return code 1), please inspect stdout and stderr to learn more.
+

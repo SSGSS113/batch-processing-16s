@@ -1,17 +1,20 @@
 threadpool:
-  downloadCores: 5
+  downloadCores: 10
   denoiseCores: 3
-  alphaCores: 7
-  fastqcCores: 7
-  importCores: 5
-  fastqdumpCores: 5
+  alphaCores: 5
+  fastqcCores: 10
+  importCores: 10
+  fastqdumpCores: 10
   taxonomyCores: 3
-  keepAliveTime: 10
+  keepAliveTime: 20
 file:
-  ALL_WORK_DIRECTORY: /data/test
-  FILES: /data/test/files
-  CLASSIFIER_PATH: /home/ssgss/下载/silva-138-99-nb-classifier.qza
-  CSV_PATH: /data/test.csv
+  ALL_WORK_DIRECTORY: /home/liangtian/ssgss/newdata
+  FILES: /home/liangtian/ssgss/newdata/files
+  CLASSIFIER_PATH: /home/liangtian/ssgss/silva-138-99-nb-classifier.qza
+  CSV_PATH: /home/liangtian/ssgss/newdata/newdata.csv
+thread:
+  denoise: 45
+  taxonomy: 45
 spring:
   main:
     web-application-type: none

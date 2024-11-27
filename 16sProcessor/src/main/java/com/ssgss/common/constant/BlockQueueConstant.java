@@ -1,9 +1,5 @@
 package com.ssgss.common.constant;
 
-import com.ssgss.SraToolKit.entity.SraDownloadDTO;
-import com.ssgss.common.entity.SraDTO;
-import com.ssgss.qiime2.entity.SraQiime2DTO;
-
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 

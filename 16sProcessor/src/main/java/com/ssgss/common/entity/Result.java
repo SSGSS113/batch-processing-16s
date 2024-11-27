@@ -1,7 +1,5 @@
 package com.ssgss.common.entity;
 
-import com.ssgss.common.command.AbstractCommand;
-
 public class Result {
     boolean sucess;
     String text;

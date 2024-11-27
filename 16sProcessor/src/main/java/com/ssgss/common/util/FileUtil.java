@@ -2,10 +2,10 @@ package com.ssgss.common.util;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -99,6 +99,40 @@ public class FileUtil {
                 zis.closeEntry();
             }
             log.info("解压完成，解压到 {}", destDir);
+        }
+    }
+
+    public static boolean MoveFileTo(String oldPath, String newPath){
+        File newFile = new File(newPath);
+        File oldFile = new File(oldPath);
+        if(!oldFile.exists()){
+            log.info("源文件 {} 不存在", oldPath);
+            return false;
+        }
+        if(newFile.exists()){
+            log.info("文件移动过程中 {} 已经存在", newPath);
+            return true;
+        }
+        if(oldFile.renameTo(newFile)){
+            log.info("{} 已经被移动到 {}", oldPath, newPath);
+
+            return true;
+        }else{
+            log.info("文件 {} 移动失败", oldPath);
+            return false;
+        }
+    }
+
+    public static boolean isEmpty(File file) throws IOException {
+
+        if((file != null) || file.isDirectory()){
+            if(file.list().length > 0){
+                return false;
+            }else{
+                return true;
+            }
+        }else{
+            throw new IOException("该文件不是文件夹或路径为空");
         }
     }
 

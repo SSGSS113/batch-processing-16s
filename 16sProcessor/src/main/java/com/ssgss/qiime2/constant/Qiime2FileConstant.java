@@ -1,5 +1,6 @@
 package com.ssgss.qiime2.constant;
 
+import com.ssgss.common.constant.CommonConstant;
 import com.ssgss.common.constant.FileConstant;
 import com.ssgss.common.util.CSVUtil;
 import com.ssgss.common.util.FileUtil;
@@ -9,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 @Slf4j
 public final class Qiime2FileConstant {
     public final static File MANIFEST_PATH;
@@ -23,6 +25,8 @@ public final class Qiime2FileConstant {
     public final static File SIMPSON_PATH;
     public final static File TAXONOMY_TSV_PATH;
     public final static File DENOISE_TSV_PATH;
+    public final static File DENOISE_PATH;
+    public final static File DENOISE_BIOM_PATH;
     public final static File ALPHA_PATH;
     public final static File OUT_TSV_PATH;
     public final static File CHAO1_TSV_PATH;
@@ -55,8 +59,12 @@ public final class Qiime2FileConstant {
         FileUtil.createDirectory(SIMPSON_PATH);
         TAXONOMY_TSV_PATH = new File(TAXONOMY_PATH, "TSV");
         FileUtil.createDirectory(TAXONOMY_TSV_PATH);
-        DENOISE_TSV_PATH = new File(FileConstant.getWorkDirectory(), "denoise");
+        DENOISE_TSV_PATH = new File(TABLE_PATH, "TSV");
         FileUtil.createDirectory(DENOISE_TSV_PATH);
+        DENOISE_BIOM_PATH = new File(TABLE_PATH, "BIOM");
+        FileUtil.createDirectory(DENOISE_BIOM_PATH);
+        DENOISE_PATH = new File(FileConstant.getWorkDirectory(), "denoise");
+        FileUtil.createDirectory(DENOISE_PATH);
         OUT_TSV_PATH = new File(OTU_PATH, "TSV");
         FileUtil.createDirectory(OUT_TSV_PATH);
         CHAO1_TSV_PATH = new File(CHAO1_PATH, "TSV");

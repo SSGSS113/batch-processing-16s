@@ -17,9 +17,11 @@ com\ssgss\qiime2\constant\SampleData.class
 com\ssgss\common\aop\ExecutionTimeAspect$ExecutionStats.class
 com\ssgss\common\configration\ThreadPollConfigrature.class
 com\ssgss\fastqc\constant\FastqcConstant.class
+com\ssgss\qiime2\command\BiomConvert.class
 com\ssgss\common\entity\Result.class
 com\ssgss\common\service\task\AlphaTask.class
 com\ssgss\common\service\task\DownloadTask.class
+com\ssgss\fastqc\entity\FastqcNode.class
 com\ssgss\qiime2\constant\AlphaConstant.class
 com\ssgss\qiime2\command\PairedData2Command$Builder.class
 com\ssgss\qiime2\factory\ExportCommandFactory.class
@@ -32,11 +34,13 @@ com\ssgss\SraToolKit\command\FastqDumpCommand.class
 com\ssgss\qiime2\factory\SingleData2CommandFactory.class
 com\ssgss\SraToolKit\command\VdbDumpCommand.class
 com\ssgss\SraToolKit\factory\VdbDumpCommandFactory.class
+com\ssgss\qiime2\factory\BiomConvertCommandFactory.class
 com\ssgss\common\control\SraControl.class
 com\ssgss\SraToolKit\service\SraToolKitService.class
 com\ssgss\common\constant\ThreadPoolControl.class
 com\ssgss\common\aop\ExecutionTimeAspect.class
 com\ssgss\qiime2\command\TaxonomyCommand.class
+com\ssgss\qiime2\command\BiomConvert$Builder.class
 com\ssgss\common\aop\annotation\ProcessTimer.class
 com\ssgss\common\factory\CommandFatory.class
 com\ssgss\fastqc\command\FastqcCommand$Builder.class
@@ -50,6 +54,7 @@ com\ssgss\common\aop\ExceptionHandlingAspect.class
 com\ssgss\common\service\task\CSVReadTask.class
 com\ssgss\qiime2\command\SingleData2Command.class
 com\ssgss\common\service\task\FastqDumpTask.class
+com\ssgss\qiime2\entity\AlphaNode.class
 com\ssgss\qiime2\factory\AlphaCommandFactory.class
 com\ssgss\SraToolKit\entity\SraDownloadDTO.class
 com\ssgss\common\service\SraService.class
@@ -63,6 +68,7 @@ com\ssgss\common\aop\annotation\HandleException.class
 com\ssgss\fastqc\command\FastqcCommand.class
 com\ssgss\qiime2\factory\ImportCommandFactory.class
 com\ssgss\qiime2\command\AlphaCommand$Builder.class
+com\ssgss\common\entity\ErrorNode.class
 com\ssgss\common\service\task\ImportTask.class
 com\ssgss\qiime2\command\ExportCommand.class
 com\ssgss\common\command\AbstractCommand.class

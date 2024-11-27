@@ -1,11 +1,17 @@
 package com.ssgss.common.service;
 
 import com.ssgss.common.constant.BlockQueueConstant;
-import com.ssgss.common.configration.FileConfig;
 import com.ssgss.common.constant.FileConstant;
 import com.ssgss.common.constant.ThreadPoolControl;
 import com.ssgss.common.service.pipeline.Performer;
-import com.ssgss.common.service.task.*;
+import com.ssgss.common.service.task.AlphaTask;
+import com.ssgss.common.service.task.CSVReadTask;
+import com.ssgss.common.service.task.DenoiseTask;
+import com.ssgss.common.service.task.DownloadTask;
+import com.ssgss.common.service.task.FastqDumpTask;
+import com.ssgss.common.service.task.FastqcTask;
+import com.ssgss.common.service.task.ImportTask;
+import com.ssgss.common.service.task.TaxonomyTask;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +20,8 @@ public class SraService {
     @Resource
     ThreadPoolControl threadPoolControl;
     public void doCSVRead(){
-        Thread t1 = new Thread(new CSVReadTask(FileConstant.getCsvPath()));
-        t1.start();
+        CSVReadTask task = new CSVReadTask(FileConstant.getCsvPath());
+        task.run();
     }
     public void doDownload(){
         Thread t1 = new Thread(new Performer(BlockQueueConstant.SRA_LIST, threadPoolControl.getDownloadPoll(),
@@ -44,7 +50,7 @@ public class SraService {
                 "Taxonomy", TaxonomyTask.class)).start();
     }
     public void doAlpha(){
-        new Thread(new Performer(BlockQueueConstant.DENOISE_LIST, threadPoolControl.getAlphaPool(),
+        new Thread(new Performer(BlockQueueConstant.TAXONOXY_LIST, threadPoolControl.getAlphaPool(),
                 "Alpha", AlphaTask.class)).start();
     }
 }

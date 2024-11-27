@@ -2,14 +2,11 @@ package com.ssgss.fastqc.command;
 
 import com.ssgss.common.command.AbstractCommand;
 import com.ssgss.fastqc.constant.FastqcConstant;
-import com.ssgss.fastqc.entity.FastqcRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 @Setter
 @Getter

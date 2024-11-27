@@ -12,6 +12,8 @@ public class TaxonomyCommandFactory {
                 .addArg("classify-sklearn")
                 .addArg("--i-classifier")
                 .addArg(FileConstant.getCLASSIFIER().getPath())
+                .addArg("--p-n-jobs")
+                .addArg(String.valueOf(Qiime2Constant.TAXONOMY_THREAD))
                 .addArg("--i-reads")
                 .addArg(sra.getRep().getPath())
                 .addArg("--o-classification")

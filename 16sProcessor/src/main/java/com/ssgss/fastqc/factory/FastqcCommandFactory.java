@@ -1,9 +1,7 @@
 package com.ssgss.fastqc.factory;
 
 import com.ssgss.common.command.Command;
-import com.ssgss.common.factory.CommandFatory;
 import com.ssgss.fastqc.command.FastqcCommand;
-import com.ssgss.fastqc.constant.FastqcConstant;
 import com.ssgss.fastqc.entity.FastqcRequest;
 
 public class FastqcCommandFactory {

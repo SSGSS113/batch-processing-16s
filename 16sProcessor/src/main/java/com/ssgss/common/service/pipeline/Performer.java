@@ -6,16 +6,18 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.*;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 @Slf4j
 public class Performer implements Runnable{
     private final BlockingDeque<Object> inputQueue;
     private int num;
-    private final Executor executor;
+    private final ExecutorService executor;
     private final String step;
     private final Class clazz;
-    public Performer(BlockingDeque<Object> inputQueue, Executor executor, String step, Class clazz){
+    public Performer(BlockingDeque<Object> inputQueue, ExecutorService executor, String step, Class clazz){
         this.executor = executor;
         this.inputQueue = inputQueue;
         this.step = step;
@@ -26,7 +28,8 @@ public class Performer implements Runnable{
         while (true) {
             try {
                 Constructor<?> constructor = clazz.getDeclaredConstructor(Object.class);
-                log.info("{} 步骤正在从阻塞队列: {} 中读取数据", step);
+                log.info("{} 步骤的队列中还剩余 {} 条数据",
+                        step, inputQueue.size());
                 Object sra = inputQueue.take();
                 AbstractTask task = (AbstractTask) constructor.newInstance(sra);
                 executor.execute(task);
@@ -36,7 +39,10 @@ public class Performer implements Runnable{
             } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
-            if(num >= CommonConstant.NUM){
+            if(num + CommonConstant.FAILED_NUM.get() >= CommonConstant.NUM){
+                executor.shutdown();
+                log.info("+++++++++++++++++++++++++++++++++++++{} 已经全部加载结束, 上一步线程池已关闭++++++++++++++++++++++++++++++++++++++",
+                        step);
                 break;
             }
         }

@@ -11,7 +11,7 @@ public class SingleData2CommandFactory {
                 .addArg("--i-demultiplexed-seqs")
                 .addArg(sra.getDemux().getPath())
                 .addArg("--p-n-threads")
-                .addArg(String.valueOf(Qiime2Constant.THREAD))
+                .addArg(String.valueOf(Qiime2Constant.DENOISE_THREAD))
                 .addArg("--p-trim-left")
                 .addArg(String.valueOf(sra.getSra().getLeftTrim()))
                 .addArg("--p-trunc-len")
