@@ -13,8 +13,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public final class Qiime2Constant {
     public final static ReentrantLock ALPHY_LOCK = new ReentrantLock();
     private static final Runtime runtime = Runtime.getRuntime();
-    public static final int DENOISE_THREAD;
-    public static final int TAXONOMY_THREAD;
+    public static int DENOISE_THREAD;
+    public static int TAXONOMY_THREAD;
     public static final String IMPORT_BASELINE = "qiime tools import";
     public static final String SINGLE_DATA2_BASELINE = "qiime dada2 denoise-single";
     public static final String PAIRED_DATA2_BASELINE = "qiime dada2 denoise-paired";
@@ -46,5 +46,12 @@ public final class Qiime2Constant {
                 newNode.getAlphaMap().put(key, Double.valueOf(line[alphaList.get(key)]));
             }
         }
+    }
+    public static void setDenoiseThread(int thread) {
+        DENOISE_THREAD = thread;
+    }
+
+    public static void setTaxonomyThread(int thread) {
+        TAXONOMY_THREAD = thread;
     }
 }

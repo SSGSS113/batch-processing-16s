@@ -73,12 +73,20 @@ public class AlphaTask extends AbstractTask{
         }
         List<String[]> newData = new ArrayList<>();
         newData.add(header);
+        for(String s: header){
+            log.info("header : {}", s);
+        }
+        log.info("ALPHA_MAP 数据数量为：{}", Qiime2Constant.ALPHY_MAP.size());
         for(AlphaNode node:Qiime2Constant.ALPHY_MAP.values()){
+            StringBuilder sb = new StringBuilder();
             String[] line = new String[5];
             line[0] = node.getSraId();
+            sb.append(line[0]).append(",");
             for(int i = 1;i<=4;i++){
                 line[i] = String.valueOf(node.getAlphaMap().get(INDEX.get(i)));
+                sb.append(line[i]).append(",");
             }
+            log.info(sb.toString());
             newData.add(line);
         }
         log.info("alpha多样性文档已更新");

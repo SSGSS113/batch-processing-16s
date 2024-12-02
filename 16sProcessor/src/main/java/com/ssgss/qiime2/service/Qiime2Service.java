@@ -141,11 +141,13 @@ public class Qiime2Service {
         }
         boolean ans = true;
         AlphaNode node = Qiime2Constant.ALPHY_MAP.getOrDefault(sra.getSra().getSraId(), new AlphaNode());
+        node.setSraId(sra.getSra().getSraId());
         for(AlphaConstant alpha : Qiime2Constant.alphaList.keySet()){
             String type = alpha.getType();
             File outputPath = null;
             File tsvPath = null;
-
+            log.info("alpha 的 tpye : {}, sraId : {}, ALPHY_MAP 是否存在该数据：{}", type, sra.getSra().getSraId(),
+                    Qiime2Constant.ALPHY_MAP.containsKey(sra.getSra().getSraId()));
             if(node.getAlphaMap().get(alpha) >= 0){
                 log.info("{} 的 {} α多样性已经存在", sra.getSra().getSraId(), type);
                 continue;
@@ -171,6 +173,8 @@ public class Qiime2Service {
                             String.format("%s_%s.qza", sra.getSra().getSraId(), type));
                     tsvPath = Qiime2FileConstant.SIMPSON_TSV_PATH;
                     break;
+                default:
+                    log.info("不存在该类型的多样性数据");
             }
             Result result;
             if(!outputPath.exists()){
@@ -198,6 +202,7 @@ public class Qiime2Service {
                 log.error("{} 的 α多样性 {} 的值为空", sra.getSra().getSraId(), type);
             }else{
                 node.getAlphaMap().put(alpha, Double.valueOf(value));
+                Qiime2Constant.ALPHY_MAP.put(node.getSraId(), node);
             }
         }
         return ans;

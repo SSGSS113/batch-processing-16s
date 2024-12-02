@@ -19,6 +19,7 @@ public final class Qiime2FileConstant {
     public final static File STATS_PATH;
     public final static File TABLE_PATH;
     public final static File TAXONOMY_PATH;
+    public final static File TAXONOMY_TEMP;
     public final static File SHANNON_PATH;
     public final static File OTU_PATH;
     public final static File CHAO1_PATH;
@@ -47,6 +48,8 @@ public final class Qiime2FileConstant {
         FileUtil.createDirectory(TABLE_PATH);
         TAXONOMY_PATH = new File(FileConstant.getWorkDirectory(), "taxonomy");
         FileUtil.createDirectory(TAXONOMY_PATH);
+        TAXONOMY_TEMP = new File(FileConstant.getWorkDirectory(), "temp");
+        FileUtil.createDirectory(TAXONOMY_TEMP);
         ALPHA_PATH = new File(FileConstant.getWorkDirectory(), "alpha");
         FileUtil.createDirectory(ALPHA_PATH);
         SHANNON_PATH = new File(ALPHA_PATH, "shannon");

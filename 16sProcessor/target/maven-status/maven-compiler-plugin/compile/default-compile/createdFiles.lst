@@ -45,6 +45,7 @@ com\ssgss\common\aop\annotation\ProcessTimer.class
 com\ssgss\common\factory\CommandFatory.class
 com\ssgss\fastqc\command\FastqcCommand$Builder.class
 com\ssgss\fastqc\factory\FastqcCommandFactory.class
+com\ssgss\common\configration\ThreadCommandLineAppStartupRunner.class
 com\ssgss\common\service\pipeline\Performer.class
 com\ssgss\common\service\task\TaxonomyTask.class
 com\ssgss\common\constant\SraException.class
