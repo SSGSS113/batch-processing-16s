@@ -35,7 +35,7 @@ public class SraToolKitService {
                 return true;
             }
         } catch (IOException e) {
-            throw new SraException("下载路径有误");
+            log.info("{} 还未下载", sra.getSra().getSraId());
         }
         Command command = PrefetchCommandFactory.getCommand(sra);
             Result result = command.execute();

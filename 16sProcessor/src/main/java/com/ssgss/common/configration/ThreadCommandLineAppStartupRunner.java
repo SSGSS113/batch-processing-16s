@@ -6,12 +6,14 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 
 @Slf4j
-@Component
+@Configuration
 public class ThreadCommandLineAppStartupRunner implements CommandLineRunner {
     @Value("${DT:10}")
     private int denoise;
@@ -52,8 +54,6 @@ public class ThreadCommandLineAppStartupRunner implements CommandLineRunner {
     @Value("${CSV}")
     private String CSV;
 
-    @Resource
-    ThreadPollConfigrature threadPollConfigrature;
     @Override
     public void run(String... args) throws Exception {
         if(DIR == null || DIR.isBlank()){
@@ -72,15 +72,6 @@ public class ThreadCommandLineAppStartupRunner implements CommandLineRunner {
         }
         File csv = new File(CSV);
         try {
-            log.info("ThreadConfig 初始化开始");
-            Qiime2Constant.setDenoiseThread(denoise);
-            Qiime2Constant.setTaxonomyThread(taxonomy);
-        } catch (Exception e) {
-            log.error("ThreadConfig 初始化失败", e);
-            throw e; // 重新抛出异常，以便 Spring 处理
-        }
-        log.info("ThreadConfig 初始化结束");
-        try {
             log.info("FileConfig 初始化开始");
             FileConstant.setWorkDirectory(allWorkDirectory);
             FileConstant.setFILES(new File(allWorkDirectory, "files"));
@@ -92,14 +83,25 @@ public class ThreadCommandLineAppStartupRunner implements CommandLineRunner {
         }
         log.info("FileConfig 初始化结束");
         log.info("ThreadPollConfig 初始化开始");
-        threadPollConfigrature.setDownloadCores(downloadCores);
-        threadPollConfigrature.setFastqdumpCores(fastqdumpCores);
-        threadPollConfigrature.setFastqcCores(fastqcCores);
-        threadPollConfigrature.setImportCores(importCores);
-        threadPollConfigrature.setDenoiseCores(denoiseCores);
-        threadPollConfigrature.setTaxonomyCores(taxonomyCores);
-        threadPollConfigrature.setAlphaCores(alphaCores);
-        threadPollConfigrature.setKeepAliveTime(keepAliveTime);
         log.info("ThreadPollConfig 初始化结束");
+        try {
+            log.info("ThreadConfig 初始化开始");
+            Qiime2Constant.setDenoiseThread(denoise);
+            Qiime2Constant.setTaxonomyThread(taxonomy);
+        } catch (Exception e) {
+            log.error("ThreadConfig 初始化失败", e);
+            throw e; // 重新抛出异常，以便 Spring 处理
+        }
+        log.info("ThreadConfig 初始化结束");
+    }
+
+    @Bean("threadPollConfigrature")
+    public ThreadPollConfigrature setConfig(){
+        log.info("threadPollConfigrature 进行初始化, downloadCores = {}, denoiseCores = {}, alphaCores = {}," +
+                "fastqcCores = {}, importCores = {}, fastqdumpCores = {}, taxonomyCores = {}, keepAliveTime = {}",
+                downloadCores, denoiseCores, alphaCores , fastqcCores, importCores, fastqdumpCores,
+                taxonomyCores, keepAliveTime);
+        return new ThreadPollConfigrature(downloadCores, denoiseCores, alphaCores, fastqcCores, importCores,
+                fastqdumpCores, taxonomyCores, keepAliveTime);
     }
 }

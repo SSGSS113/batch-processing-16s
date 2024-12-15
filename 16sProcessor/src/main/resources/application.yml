@@ -1,11 +1,11 @@
 threadpool:
   downloadCores: 10
-  denoiseCores: 5
+  denoiseCores: 2
   alphaCores: 10
   fastqcCores: 10
   importCores: 10
   fastqdumpCores: 10
-  taxonomyCores: 5
+  taxonomyCores: 2
   keepAliveTime: 20
 file:
   ALL_WORK_DIRECTORY: /home/liangtian/ssgss/newdata

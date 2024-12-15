@@ -78,7 +78,7 @@ public class FastqcService {
             try {
                 log.info("分析 {}", request.getFastqc_output_1());
                 int len = FastQCAnalyzeUtil.analyzeFastQC(request.getFastqc_output_1());
-                int leftLen = Math.max(len, 150) - request.getSra().getLeftTrim();
+                int leftLen = Math.max(len - request.getSra().getLeftTrim(), 150);
                 leftLen = Math.min(leftLen, 300);
                 request.getSra().setLeftLen(leftLen);
                 newNode.setLeft(leftLen);
@@ -95,9 +95,10 @@ public class FastqcService {
                 try {
                     log.info("分析 {}", request.getFastqc_output_2());
                     int len = FastQCAnalyzeUtil.analyzeFastQC(request.getFastqc_output_2());
-                    int rightLen = Math.max(len, 150) - request.getSra().getRightTrim();
+                    int rightLen = Math.max(len - request.getSra().getRightTrim(), 150);
                     rightLen = Math.min(rightLen, 300);
                     request.getSra().setRightLen(rightLen);
+//                    rightLen = Math.max(rightLen, request.getSra().getLeftLen() - 50);
                     newNode.setRight(rightLen);
                     log.info("sra: {} 的 fastqc 分析的 rightLen 的值为 {}", request.getSra().getSraId(), rightLen);
                 } catch (IOException e) {

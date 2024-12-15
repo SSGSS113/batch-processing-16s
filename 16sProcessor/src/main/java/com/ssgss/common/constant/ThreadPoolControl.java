@@ -5,6 +5,7 @@ import com.ssgss.common.factory.threadFactory.MyThreadFactory;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ArrayBlockingQueue;
@@ -17,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 @Getter
 @Slf4j
+@DependsOn("threadPollConfigrature")
 public class ThreadPoolControl {
     ThreadPollConfigrature threadPollConfigrature;
     private final ExecutorService downloadPoll;
@@ -28,6 +30,12 @@ public class ThreadPoolControl {
     private final ExecutorService alphaPool;
     @Autowired
     public ThreadPoolControl(ThreadPollConfigrature threadPollConfigrature){
+        log.info("ThreadPoolControl 进行初始化, downloadCores = {}, denoiseCores = {}, alphaCores = {}," +
+                        "fastqcCores = {}, importCores = {}, fastqdumpCores = {}, taxonomyCores = {}, keepAliveTime = {}",
+                threadPollConfigrature.getDownloadCores(), threadPollConfigrature.getDenoiseCores(),
+                threadPollConfigrature.getAlphaCores() , threadPollConfigrature.getFastqcCores(),
+                threadPollConfigrature.getImportCores(), threadPollConfigrature.getFastqdumpCores(),
+                threadPollConfigrature.getTaxonomyCores(), threadPollConfigrature.getKeepAliveTime());
         downloadPoll = new ThreadPoolExecutor(threadPollConfigrature.getDownloadCores(),
                 threadPollConfigrature.getDownloadCores(),threadPollConfigrature.getKeepAliveTime(),
                 TimeUnit.SECONDS,new LinkedBlockingDeque<>(), new MyThreadFactory("DownloadPool"));

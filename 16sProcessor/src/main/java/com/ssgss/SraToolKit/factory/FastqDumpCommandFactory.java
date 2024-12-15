@@ -5,8 +5,6 @@ import com.ssgss.SraToolKit.constant.SraToolKitConstant;
 import com.ssgss.SraToolKit.constant.SraToolKitFileConstant;
 import com.ssgss.SraToolKit.entity.SraDownloadDTO;
 import com.ssgss.common.command.Command;
-import com.ssgss.common.configration.FileConfig;
-import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.io.File;

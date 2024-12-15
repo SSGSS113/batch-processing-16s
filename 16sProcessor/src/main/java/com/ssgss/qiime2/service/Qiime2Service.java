@@ -32,6 +32,9 @@ public class Qiime2Service {
     @ProcessTimer("Qiime2:doImport")
     public static boolean doImport(SraQiime2DTO sra) throws SraException {
         sra.setDemux(new File(Qiime2FileConstant.DEMUX_PATH, String.format("%s_demux.qza", sra.getSra().getSraId())));
+        File manifest = new File(Qiime2FileConstant.MANIFEST_PATH,
+                String.format("%s_manifest.csv", sra.getSra().getSraId()));
+        sra.setManifest(manifest);
         getManifest(sra);
         if(sra.getDemux().exists()){
             log.info("{} 已经存在", sra.getDemux());
@@ -63,9 +66,40 @@ public class Qiime2Service {
                     : SingleData2CommandFactory.getCommand(sra);
             result = command.execute();
             if(!isSuccess(result)){
-                String message = String.format("QIIME2: %s 的 doDenoise 命令失败", sra.getSra().getSraId());
-                log.error(message);
-                return false;
+                if(sra.getSra().isPaired()){
+                    log.error(String.format("%s 开始重新Import，作为单端队列进行操作", sra.getSra().getSraId()));
+                    FileUtil.deleteFile(sra.getDemux());
+                    sra.getSra().setPaired(false);
+                    if(!doImport(sra)){
+                        log.error(String.format("%s 重新Import出错", sra.getSra().getSraId()));
+                        return false;
+                    }
+                    command = SingleData2CommandFactory.getCommand(sra);
+                    result = command.execute();
+                }
+                if(!result.isSucess()){
+                    String message = String.format("QIIME2: %s 的 doDenoise 命令失败", sra.getSra().getSraId());
+                    log.error(message);
+                    return false;
+                }
+            }
+            long len = sra.getTable().length();
+            if(len < 15 * 1024){
+                if(sra.getSra().isPaired()){
+                    log.error("{} 的otu数量太小,table.qza大小为 {} 字节， 下限是 {} 字节，开始重新Import，作为单端队列进行操作",
+                            sra.getSra().getSraId(), len, 30 * 1024);
+                    FileUtil.deleteFile(sra.getDemux());
+                    FileUtil.deleteFile(sra.getTable());
+                    FileUtil.deleteFile(sra.getRep());
+                    FileUtil.deleteFile(sra.getStats());
+                    sra.getSra().setPaired(false);
+                    if(!doImport(sra)){
+                        log.error(String.format("%s 重新Import出错", sra.getSra().getSraId()));
+                        return false;
+                    }
+                    command = SingleData2CommandFactory.getCommand(sra);
+                    result = command.execute();
+                }
             }
         }else{
             log.info("Sra : {} 的 rep、table、stats均已存在", sra.getSra().getSraId());
@@ -226,8 +260,10 @@ public class Qiime2Service {
     }
 
     private static void getManifest(SraQiime2DTO sra) throws SraException{
-        File manifest = new File(Qiime2FileConstant.MANIFEST_PATH,
-                String.format("%s_manifest.csv", sra.getSra().getSraId()));
+        if(sra.getManifest().exists()){
+            log.info("{} 已经存在", sra.getManifest());
+            return;
+        }
         List<String> headers = new ArrayList<>();
         headers.add("sample-id");
         List<String> line = new ArrayList<>();
@@ -241,16 +277,15 @@ public class Qiime2Service {
             headers.add("absolute-filepath");
         }
         try {
-            CSVUtil.createCSV(manifest.getPath(), headers, '\t');
+            CSVUtil.createCSV(sra.getManifest().getPath(), headers, '\t');
         } catch (IOException e) {
             throw new SraException(String.format("%s 创建Manifest表格出错", sra.getSra().getSraId()), e);
         }
         try {
-            CSVUtil.addDataToCSV(manifest.getPath(), line, '\t');
+            CSVUtil.addDataToCSV(sra.getManifest().getPath(), line, '\t');
         } catch (IOException e) {
             throw new SraException(String.format("%s Manifest表格添加数据错误", sra.getSra().getSraId()), e);
         }
-        sra.setManifest(manifest);
     }
 
     private static void doExport(SraQiime2DTO sra, File inputPath, File outputPath) throws SraException{

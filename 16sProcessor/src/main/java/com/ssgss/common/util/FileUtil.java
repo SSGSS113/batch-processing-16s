@@ -13,6 +13,13 @@ import java.util.zip.ZipInputStream;
 
 @Slf4j
 public class FileUtil {
+    public static boolean deleteFile(File file){
+        if(!file.exists()){
+            return true;
+        }
+        return file.delete();
+    }
+
     public static boolean createDirectory(File file) {
         String dirPath = file.getPath();
         if (!file.exists()) {
@@ -124,8 +131,8 @@ public class FileUtil {
     }
 
     public static boolean isEmpty(File file) throws IOException {
-
-        if((file != null) || file.isDirectory()){
+        log.info("file 的路径为 {}", file);
+        if((file != null) && file.isDirectory()){
             if(file.list().length > 0){
                 return false;
             }else{

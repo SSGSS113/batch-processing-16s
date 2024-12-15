@@ -34,7 +34,6 @@ D:\code\java\batch-processing-16s\16sProcessor\src\main\java\com\ssgss\common\se
 D:\code\java\batch-processing-16s\16sProcessor\src\main\java\com\ssgss\qiime2\constant\Qiime2Constant.java
 D:\code\java\batch-processing-16s\16sProcessor\src\main\java\com\ssgss\SraToolKit\service\SraToolKitService.java
 D:\code\java\batch-processing-16s\16sProcessor\src\main\java\com\ssgss\common\command\Command.java
-D:\code\java\batch-processing-16s\16sProcessor\src\main\java\com\ssgss\common\configration\FileConfig.java
 D:\code\java\batch-processing-16s\16sProcessor\src\main\java\com\ssgss\common\service\task\TaxonomyTask.java
 D:\code\java\batch-processing-16s\16sProcessor\src\main\java\com\ssgss\SraToolKit\factory\FastqDumpCommandFactory.java
 D:\code\java\batch-processing-16s\16sProcessor\src\main\java\com\ssgss\SraToolKit\entity\SraDownloadDTO.java
@@ -43,7 +42,6 @@ D:\code\java\batch-processing-16s\16sProcessor\src\main\java\com\ssgss\common\ut
 D:\code\java\batch-processing-16s\16sProcessor\src\main\java\com\ssgss\SraToolKit\command\FastqDumpCommand.java
 D:\code\java\batch-processing-16s\16sProcessor\src\main\java\com\ssgss\common\aop\annotation\HandleException.java
 D:\code\java\batch-processing-16s\16sProcessor\src\main\java\com\ssgss\common\util\FileUtil.java
-D:\code\java\batch-processing-16s\16sProcessor\src\main\java\com\ssgss\common\configration\ThreadConfig.java
 D:\code\java\batch-processing-16s\16sProcessor\src\main\java\com\ssgss\common\service\task\FastqDumpTask.java
 D:\code\java\batch-processing-16s\16sProcessor\src\main\java\com\ssgss\common\entity\Result.java
 D:\code\java\batch-processing-16s\16sProcessor\src\main\java\com\ssgss\common\factory\threadFactory\MyThreadFactory.java

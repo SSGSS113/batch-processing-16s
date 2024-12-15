@@ -82,7 +82,6 @@ com\ssgss\qiime2\factory\TaxonomyCommandFactory.class
 com\ssgss\common\entity\SraDTO.class
 com\ssgss\qiime2\factory\PairedData2CommandFactory.class
 com\ssgss\qiime2\service\Qiime2Service.class
-com\ssgss\common\configration\FileConfig.class
 com\ssgss\common\service\task\DenoiseTask.class
 com\ssgss\qiime2\command\ImportCommand.class
 com\ssgss\qiime2\command\ImportCommand$Builder.class
